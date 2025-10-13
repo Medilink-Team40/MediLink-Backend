@@ -1,0 +1,46 @@
+// src/practitioner/entities/practitioner-telecom.entity.ts
+
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToOne,
+  JoinColumn,
+} from 'typeorm';
+import { Practitioner } from './practitioner.entity';
+import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
+
+@Entity('practitioner_telecom')
+export class PractitionerTelecom {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({
+    type: 'enum',
+    enum: FHIRTelecomSystem,
+    nullable: false,
+  })
+  system: FHIRTelecomSystem;
+
+  @Column({ type: 'varchar', nullable: false })
+  value: string;
+
+  @Column({
+    type: 'enum',
+    enum: TelecomUses,
+    default: TelecomUses.WORK,
+  })
+  use: TelecomUses;
+
+  @Column({ type: 'integer', nullable: false })
+  rank: number; 
+
+  @ManyToOne(() => Practitioner, (practitioner) => practitioner.telecom, {
+    onDelete: 'CASCADE',
+  })
+  @JoinColumn({ name: 'practitioner_id' })
+  practitioner: Practitioner;
+
+  @Column({ type: 'uuid', name: 'practitioner_id' })
+  practitionerId: string;
+}
