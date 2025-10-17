@@ -8,11 +8,17 @@ import { ConfigService } from '@nestjs/config';
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
   constructor(private readonly config: ConfigService) {
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor() {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,
       secretOrKeyProvider: passportJwtSecret({
         jwksUri: `https://keycloak-production-2d31.up.railway.app/realms/MediLink/protocol/openid-connect/certs`,
+        jwksUri:
+          'http://keycloak-host/realms/tu_realm_id/protocol/openid-connect/certs',
         cache: true,
         rateLimit: true,
         jwksRequestsPerMinute: 5,
@@ -25,6 +31,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       userId: payload.sub,
       username: payload.preferred_username,
       roles: payload.resource_access['medilink-frontend'].roles,
+      roles: payload.realm_access.roles,
     };
   }
 }
