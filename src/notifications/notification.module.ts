@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { BullModule } from '@nestjs/bullmq';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { NotificationService } from './notification.service';
 import { NotificationController } from './notification.controller';
 import { NotificationEntity } from './entities/notification.entitie';
@@ -12,9 +13,19 @@ import { NodemailerService } from './nodemailer.service';
 
 @Module({
   imports: [
+    ConfigModule,
     TypeOrmModule.forFeature([NotificationEntity]),
-    BullModule.registerQueue({
+    BullModule.registerQueueAsync({
       name: 'notifications',
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        connection: {
+          host: configService.get<string>('redis.host'),
+          port: configService.get<number>('redis.port'),
+          password: configService.get<string>('redis.password'),
+        },
+      }),
+      inject: [ConfigService],
     }),
   ],
   controllers: [NotificationController],
