@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { NotificationModule } from './notifications/notification.module';
 import { AuthModule } from './auth/auth.module';
+import { AvailabilityModule } from './availability/availability.module';
 
 @Module({
   imports: [
@@ -24,7 +25,8 @@ import { AuthModule } from './auth/auth.module';
     }),
     BullMQModule,
     BullBoardConfigModule,
-    NotificationModule, // Importar el módulo de notificaciones
+    NotificationModule,
+    AvailabilityModule, // Importar el módulo de notificaciones
   ],
 })
 export class AppModule {}
