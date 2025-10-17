@@ -9,9 +9,11 @@ import { BullMQModule } from './bullmq/bullmq.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { TypeOrmConfigService } from './config/typeorm.config';
 import { NotificationModule } from './notifications/notification.module';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
+    AuthModule,
     ConfigModule.forRoot({
       isGlobal: true,
       load: [configuration, notificationConfig],
@@ -24,11 +26,5 @@ import { NotificationModule } from './notifications/notification.module';
     BullBoardConfigModule,
     NotificationModule, // Importar el módulo de notificaciones
   ],
-import { AuthModule } from './auth/auth.module';
-
-@Module({
-  imports: [AuthModule],
-  controllers: [AppController],
-  providers: [AppService],
 })
 export class AppModule {}

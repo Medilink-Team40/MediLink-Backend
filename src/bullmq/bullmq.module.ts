@@ -15,8 +15,17 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
         },
       }),
     }),
-    BullModule.registerQueue({
-      name: 'notifications',
+    BullModule.registerQueueAsync({
+      imports: [ConfigModule],
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => ({
+        name: 'notifications',
+        connection: {
+          host: configService.get<string>('redis.host'),
+          port: configService.get<number>('redis.port'),
+          password: configService.get<string>('redis.password'),
+        },
+      }),
     }),
   ],
   exports: [BullModule],
