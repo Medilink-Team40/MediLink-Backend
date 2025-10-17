@@ -24,6 +24,10 @@ import { NotificationModule } from './notifications/notification.module';
     BullBoardConfigModule,
     NotificationModule, // Importar el módulo de notificaciones
   ],
+import { AuthModule } from './auth/auth.module';
+
+@Module({
+  imports: [AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })

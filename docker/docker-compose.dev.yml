@@ -1,110 +1,38 @@
-# ============================================
-# DOCKER COMPOSE - SERVICIOS DE DESARROLLO
-# ============================================
-
 services:
-  # ==========================
-  # PostgreSQL
-  # ==========================
   postgres:
-    image: postgres:lastest
-    container_name: medilink_postgres_dev
+    image: postgres:16
+    container_name: keycloak_postgres
     restart: unless-stopped
-    ports:
-      - "5433:5432"
     environment:
-      - POSTGRES_USER=user
-      - POSTGRES_PASSWORD=password
-      - POSTGRES_DB=medilink
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
-    networks:
-      - dev_network
+    ports:
+      - "${POSTGRES_PORT}:5432"
 
-  # ==========================
-  # pgAdmin (UI para PostgreSQL)
-  # ==========================
-  pgadmin:
-    image: dpage/pgadmin4:8
-    container_name: medilink_pgadmin_dev
+  keycloak:
+    image: quay.io/keycloak/keycloak:latest
+    container_name: keycloak
     restart: unless-stopped
     depends_on:
       - postgres
     environment:
-      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
-      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+      KC_DB: postgres
+      KC_DB_URL: jdbc:postgresql://postgres:5432/${POSTGRES_DB}
+      KC_DB_USERNAME: ${POSTGRES_USER}
+      KC_DB_PASSWORD: ${POSTGRES_PASSWORD}
+      KC_HOSTNAME_STRICT: "false"
+      KEYCLOAK_ADMIN: ${KEYCLOAK_ADMIN}
+      KEYCLOAK_ADMIN_PASSWORD: ${KEYCLOAK_ADMIN_PASSWORD}
+    command:
+      - start-dev
     ports:
-      - "5050:80"
-    networks:
-      - dev_network
+      - "${KEYCLOAK_PORT}:8080"
     volumes:
-      - pgadmin_data:/var/lib/pgadmin
+      - keycloak_data:/opt/keycloak/data
 
-  # ==========================
-  # Redis
-  # ==========================
-  redis:
-    image: redis:7-alpine
-    container_name: medilink_redis_dev
-    restart: unless-stopped
-    ports:
-      - "6379:6379"
-    networks:
-      - dev_network
-    volumes:
-      - redis_data:/data
-
-  # ==========================
-  # RedisInsight (UI para Redis)
-  # ==========================
-  redisinsight:
-    image: redis/redisinsight:latest
-    container_name: medilink_redisinsight_dev
-    restart: unless-stopped
-    depends_on:
-      - redis
-    ports:
-      - "5540:5540"
-    networks:
-      - dev_network
-    volumes:
-      - redisinsight_data:/data
-
-  # ==========================
-  # n8n (Automatización)
-  # ==========================
-  n8n:
-    image: n8nio/n8n:latest
-    container_name: medilink_n8n_dev
-    restart: unless-stopped
-    environment:
-      - N8N_BASIC_AUTH_ACTIVE=true
-      - N8N_BASIC_AUTH_USER=${N8N_BASIC_AUTH_USER}
-      - N8N_BASIC_AUTH_PASSWORD=${N8N_BASIC_AUTH_PASSWORD}
-      - N8N_HOST=localhost
-      - N8N_PORT=5678
-      - N8N_PROTOCOL=http
-      - GENERIC_TIMEZONE=America/Argentina/Buenos_Aires
-    ports:
-      - "5678:5678"
-    volumes:
-      - n8n_data:/home/node/.n8n
-    networks:
-      - dev_network
-
-# ==========================
-# Volúmenes persistentes
-# ==========================
 volumes:
   postgres_data:
-  pgadmin_data:
-  redis_data:
-  redisinsight_data:
-  n8n_data:
-
-# ==========================
-# Red de desarrollo
-# ==========================
-networks:
-  dev_network:
-    driver: bridge
+  keycloak_data:
