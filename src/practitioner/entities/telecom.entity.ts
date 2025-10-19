@@ -6,11 +6,13 @@ import {
   Column,
   ManyToOne,
   JoinColumn,
+  Unique,
 } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
 import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
 
 @Entity('practitioner_telecom')
+@Unique(['value'])
 export class PractitionerTelecom {
   @PrimaryGeneratedColumn('uuid')
   id: string;

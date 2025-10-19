@@ -26,4 +26,16 @@ export class PractitionerController {
     const user = await this.service.create(practitioner, keycloakid);
     return user;
   }
+
+  @Post('update-profile')
+  @CatchError()
+  public async update(@Body() practitioner: PractitionerRegisterDto) {
+    const keycloakid = await this.keycloak.createUserAndAssignRole(
+      new KeycloakCreateDto(practitioner),
+      RolesTypes.PRACTITIONER,
+    );
+
+    const user = await this.service.create(practitioner, keycloakid);
+    return user;
+  }
 }

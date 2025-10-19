@@ -20,7 +20,6 @@ export class PractitionerService {
       active: false,
       role: RolesTypes.PRACTITIONER,
     } as unknown as Practitioner;
-    console.log('🚀 ~ PractitionerService ~ create ~ entity:', entity);
 
     const newPractitioner = this.repository.create(entity);
     return await this.repository.save(newPractitioner);
