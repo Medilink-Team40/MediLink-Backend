@@ -10,16 +10,14 @@ export class KeycloakCreateDto {
   public lastName: string;
   public enabled: boolean = true;
   public credentials: Credentials[];
-  public role: RolesTypes;
 
-  constructor(user: UserBaseCreation, role: RolesTypes) {
+  constructor(user: UserBaseCreation) {
     const { firstName, lastName } = toKeycloakName(user.name);
 
-    this.username = '';
+    this.username = firstName.replaceAll(' ', '_').toLowerCase();
     this.email = user.email;
     this.firstName = firstName;
     this.lastName = lastName;
-    this.role = role;
     this.credentials = [
       {
         type: 'password',

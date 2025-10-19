@@ -15,7 +15,7 @@ export function CatchError(errorHandler?: (error: any) => any) {
               return errorHandler(error);
             }
             console.error(`Error asíncrono en ${propertyKey}:`, error);
-            throw error;
+            throw error;  
           });
         }
 
@@ -26,6 +26,6 @@ export function CatchError(errorHandler?: (error: any) => any) {
       }
     };
 
-    return descriptor; // Devuelve el nuevo descriptor del método
+    return descriptor;
   };
 }

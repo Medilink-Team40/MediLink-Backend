@@ -97,6 +97,7 @@ export class CreateService {
 
   public async createUserAndAssignRole(
     user: KeycloakCreateDto,
+    role: RolesTypes,
   ): Promise<string> {
     const token = this.token ?? (await this.getToken());
     const realm = this.config.get('KEYCLOAK_TARGET_REALM');
@@ -114,7 +115,7 @@ export class CreateService {
 
     const newUserId = createResponse.headers.location.split('/').pop();
 
-    await this.assignRoleToUser(newUserId, user.role);
+    await this.assignRoleToUser(newUserId, role);
     return newUserId;
   }
 }

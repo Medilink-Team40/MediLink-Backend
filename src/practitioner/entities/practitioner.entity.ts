@@ -14,6 +14,7 @@ import {
 } from './';
 import { FHIRExternalGender } from '../practitioner.types';
 import type { NameStruct } from '../practitioner.types';
+import { RolesTypes } from 'src/auth/auth.types';
 
 @Entity('practitioner')
 @Unique(['keycloakId'])
@@ -34,11 +35,18 @@ export class Practitioner {
   })
   gender: FHIRExternalGender;
 
+  @Column({
+    type: 'enum',
+    enum: RolesTypes,
+    default: RolesTypes.PRACTITIONER,
+  })
+  role: RolesTypes;
+
   @Column({ type: 'date', name: 'birth_date', nullable: false })
   birthDate: Date;
 
-  @Column({ type: 'jsonb', name: 'name', length: 50, nullable: false })
-  name: NameStruct;
+  @Column({ type: 'jsonb', name: 'name', nullable: false })
+  name: NameStruct[];
 
   @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
