@@ -6,7 +6,7 @@ import { KeycloakCreateDto } from 'src/keycloak/dto/KeycloakDto';
 import { GetRole, GetToken } from 'src/keycloak/keycloak.types';
 
 @Injectable()
-export class CreateService {
+export class KeyCloakService {
   private token: string;
 
   constructor(
@@ -63,10 +63,7 @@ export class CreateService {
     return response.data;
   }
 
-  private async assignRoleToUser(
-    userId: string,
-    roleName: RolesTypes,
-  ): Promise<void> {
+  private async assignRoleToUser(userId: string, roleName: RolesTypes): Promise<void> {
     const token = this.token ?? (await this.getToken());
     const roleDetails = await this.getRoleDetails(roleName);
     const realm = this.config.get('KEYCLOAK_TARGET_REALM');
@@ -95,10 +92,25 @@ export class CreateService {
     }
   }
 
-  public async createUserAndAssignRole(
-    user: KeycloakCreateDto,
-    role: RolesTypes,
-  ): Promise<string> {
+  public async setCustomAttribute<T>(user: string, attribute: string, value: T) {
+    const token = this.token ?? (await this.getToken());
+    const realm = this.config.get('KEYCLOAK_TARGET_REALM');
+    const url = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/users/${user}`;
+    const payload = {
+      attributes: { [attribute]: [value] },
+    };
+    await this.http
+      .put(url, payload, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      })
+      .toPromise();
+  }
+
+  public async createUserAndAssignRole(user: KeycloakCreateDto, role: RolesTypes): Promise<string> {
+    console.log("🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ user:", user)
     const token = this.token ?? (await this.getToken());
     const realm = this.config.get('KEYCLOAK_TARGET_REALM');
     const userCreationUrl = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/users`;
@@ -111,6 +123,7 @@ export class CreateService {
       })
       .toPromise();
 
+    console.log("🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ createResponse:", createResponse)
     if (!createResponse) throw new Error('');
 
     const newUserId = createResponse.headers.location.split('/').pop();

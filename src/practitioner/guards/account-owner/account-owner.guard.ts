@@ -6,6 +6,10 @@ export class AccountOwnerGuard implements CanActivate {
   canActivate(
     context: ExecutionContext,
   ): boolean | Promise<boolean> | Observable<boolean> {
-    return true;
+    const request = context.switchToHttp().getRequest();
+    const userLoggedId = request.user.id;
+    const sendedId = request.params.id;
+
+    return !!userLoggedId && !!sendedId && userLoggedId == sendedId;
   }
 }

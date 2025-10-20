@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { CreateService } from './services/create/create.service';
+import { KeyCloakService } from './services/create/create.service';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
   imports: [HttpModule],
-  providers: [CreateService],
-  exports: [CreateService],
+  providers: [KeyCloakService],
+  exports: [KeyCloakService],
 })
 export class KeycloakModule {}

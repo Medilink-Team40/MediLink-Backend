@@ -1,7 +1,12 @@
-import { IsEnum, IsNotEmpty, IsNumber, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
+import { Practitioner } from '../entities';
 
-export class PractitionerTelecomDto {
+export class PractitionerTelecomDto  {
+  @IsOptional()
+  @IsUUID()
+  id?: string;
+
   @IsNotEmpty()
   @IsEnum(FHIRTelecomSystem)
   system: string;

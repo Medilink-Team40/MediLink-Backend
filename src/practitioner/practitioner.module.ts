@@ -10,7 +10,7 @@ import {
   PractitionerQualification,
   PractitionerTelecom,
 } from './entities';
-import { CreateService } from 'src/keycloak/services/create/create.service';
+import { KeyCloakService } from 'src/keycloak/services/create/create.service';
 import { HttpModule } from '@nestjs/axios';
 
 @Module({
@@ -25,7 +25,7 @@ import { HttpModule } from '@nestjs/axios';
     ]),
   ],
   controllers: [PractitionerController],
-  providers: [CreateService, PractitionerService],
+  providers: [KeyCloakService, PractitionerService],
   exports: [PractitionerService],
 })
 export class PractitionerModule {}
