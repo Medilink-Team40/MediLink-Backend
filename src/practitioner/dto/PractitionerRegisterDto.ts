@@ -1,4 +1,5 @@
 import {
+  ArrayMaxSize,
   IsArray,
   IsDateString,
   IsEmail,
@@ -13,6 +14,8 @@ import { Type } from 'class-transformer';
 import { NameStructDto } from './NameStruct.dto';
 import { PractitionerTelecomDto } from './Telecom.dto';
 import { EqualsTo } from 'src/decorators/equals-to.decorator';
+import { HasRankOne } from '../decorators/class-validator/HasRankOneTelecom';
+import { NoDuplicateEmailInTelecom } from '../decorators/class-validator/NoDuplicateEmailInTelecom';
 
 export class PractitionerRegisterDto implements UserBaseCreation {
   @IsEmail()
@@ -34,6 +37,7 @@ export class PractitionerRegisterDto implements UserBaseCreation {
   @IsNotEmpty()
   gender: FHIRExternalGender;
 
+  @IsArray()
   @ValidateNested()
   @Type(() => NameStructDto)
   name: NameStructDto[];
@@ -41,5 +45,7 @@ export class PractitionerRegisterDto implements UserBaseCreation {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => PractitionerTelecomDto)
-  telecom: PractitionerTelecomDto[];
+  @HasRankOne({ message: 'Se requiere que al menos un telecom tenga rank 1' })
+  @NoDuplicateEmailInTelecom()
+  telecom?: PractitionerTelecomDto[];
 }

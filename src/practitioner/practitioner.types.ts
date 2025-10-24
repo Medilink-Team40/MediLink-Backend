@@ -1,3 +1,8 @@
+import { PractitionerTelecomDto } from './dto/Telecom.dto';
+import { UpdateBasicDataDto } from './dto/update/UpdateBasicData.dto';
+import { PractitionerQualificationDto } from './dto/update/UpdateQualifications.dto';
+import { PractitionerIdentifier } from './entities';
+
 export enum FHIRExternalGender {
   FEMALE = 'female',
   MALE = 'male',
@@ -39,3 +44,16 @@ export interface QualificationCodes {
   code: string;
   display: string;
 }
+
+export interface UpdateProfile {
+  profile?: UpdateBasicDataDto;
+  telecom?: PractitionerTelecomDto[];
+  qualifications?: PractitionerQualificationDto[];
+  identifiers?: PractitionerIdentifier[];
+}
+
+export type ProfileModuleValues = keyof UpdateProfile;
+
+export type AvailableUpdates = Record<ProfileModuleValues, (data: UpdateProfile[keyof UpdateProfile]) => void>
+
+

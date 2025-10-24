@@ -1,5 +1,5 @@
-import { Body, Controller, Param, Patch, Post, UseGuards } from '@nestjs/common';
-import { RolesTypes } from 'src/auth/auth.types';
+import { Body, Controller, Param, Patch, Post, Req, Request, UseGuards } from '@nestjs/common';
+import { RolesTypes, TokenPayload } from 'src/auth/auth.types';
 import { KeyCloakService } from 'src/keycloak/services/create/create.service';
 import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
 import { CatchError } from 'src/decorators/errors.decorator';
@@ -29,15 +29,18 @@ export class PractitionerController {
     );
 
     const user = await this.service.create(practitioner, keycloakid);
-    //await this.keycloak.setCustomAttribute<typeof user.id>(keycloakid, 'database_id', user.id);
     return user;
   }
 
-  //@UseGuards(AuthGuard(), RolesGuard, AccountOwnerGuard)
-  //@Roles(RolesTypes.PRACTITIONER)
-  @Patch('update-profile/:keycloakId')
+  @UseGuards(AuthGuard('jwt'), RolesGuard)
+  @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
+  @Patch('update-profile')
   @CatchError()
-  public async update(@Param('keycloakId') id: string, @Body() practitioner: UpdateProfileDto) {
+  public async update(@Request() req, @Body() practitioner: UpdateProfileDto) {
+    const id = req.user.id as string;
+    const email = req.user.email as string;
+
+    await this.service.update({ ...practitioner, userId: id, email });
     return 'nenazo';
   }
 }

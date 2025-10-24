@@ -1,6 +1,5 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
-import { Practitioner } from '../entities';
 
 export class PractitionerTelecomDto  {
   @IsOptional()
@@ -19,5 +18,5 @@ export class PractitionerTelecomDto  {
   use: string;
 
   @IsNumber()
-  rank: string;
+  rank: number;
 }
