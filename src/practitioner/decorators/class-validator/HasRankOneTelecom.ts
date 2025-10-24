@@ -1,10 +1,10 @@
 // src/common/decorators/has-rank-one.decorator.ts
-import { 
-  registerDecorator, 
-  ValidationOptions, 
-  ValidatorConstraint, 
-  ValidatorConstraintInterface, 
-  ValidationArguments 
+import {
+  registerDecorator,
+  ValidationOptions,
+  ValidatorConstraint,
+  ValidatorConstraintInterface,
+  ValidationArguments,
 } from 'class-validator';
 import { PractitionerTelecomDto } from '../../dto/Telecom.dto';
 
@@ -12,9 +12,13 @@ import { PractitionerTelecomDto } from '../../dto/Telecom.dto';
 export class HasRankOneConstraint implements ValidatorConstraintInterface {
   validate(telecoms: PractitionerTelecomDto[], args: ValidationArguments) {
     if (!Array.isArray(telecoms)) {
-      return false; 
+      return false;
     }
-    return telecoms.some(telecom => telecom.rank === 1);
+
+    if (telecoms.length === 0) {
+      return true;
+    }
+    return telecoms.some((telecom) => telecom.rank === 1);
   }
 
   defaultMessage(args: ValidationArguments) {
