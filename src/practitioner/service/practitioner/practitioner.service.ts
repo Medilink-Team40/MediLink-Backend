@@ -41,8 +41,9 @@ export class PractitionerService {
     const existingRecords = await this.telecomRepository.findBy({ practitionerId });
     const incomingValues = telecomData.map(({ value }) => value).filter((value) => !!value);
 
-    if (incomingValues.includes(email))
+    if (incomingValues.includes(email)) {
       throw new HttpException(PRACTITIONER_ERROR[PRACTITIONER_ERROR_CODES['001']], HttpStatus.BAD_REQUEST);
+    }
 
     const recordsToDelete = existingRecords.filter(
       (existing) => existing.value && !incomingValues.includes(existing.value),
@@ -52,12 +53,22 @@ export class PractitionerService {
       await this.telecomRepository.remove(recordsToDelete);
     }
 
-    const recordsToSave = telecomData.map((dto) => ({
-      ...dto,
-      practitionerId,
-    }));
+    const recordsToSaveOrUpdate = telecomData.map((dto) => {
+      const baseRecord = { ...dto, practitionerId };
 
-    await this.telecomRepository.save(recordsToSave as PractitionerTelecom[]);
+      if (dto.value) {
+        const existingMatch = existingRecords.find((e) => e.value === dto.value);
+        if (existingMatch) {
+          return this.telecomRepository.merge(existingMatch, baseRecord as PractitionerTelecom);
+        }
+      }
+
+      return baseRecord;
+    });
+
+    await this.telecomRepository.save(recordsToSaveOrUpdate as PractitionerTelecom[]);
+
+    console.log('🚀 ~ Registros guardados/actualizados exitosamente.');
   }
 
   public async updateQualifications(userId: string, data: PractitionerIdentifier[]) {}
