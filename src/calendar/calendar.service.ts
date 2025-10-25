@@ -78,9 +78,7 @@ export class CalendarService {
       relations: ['patient'],
     });
 
-    const dayAppointments = appointments.filter(
-      (a) => a.startAt >= date && a.startAt < nextDay,
-    );
+    const dayAppointments = appointments.filter((a) => a.startAt >= date && a.startAt < nextDay);
 
     return {
       date: date.toISOString().split('T')[0],
@@ -120,9 +118,7 @@ export class CalendarService {
       relations: ['patient'],
     });
 
-    const weekAppointments = appointments.filter(
-      (a) => a.startAt >= weekStart && a.startAt <= weekEnd,
-    );
+    const weekAppointments = appointments.filter((a) => a.startAt >= weekStart && a.startAt <= weekEnd);
 
     const days: CalendarDayViewDto[] = [];
     for (let i = 0; i < 7; i++) {

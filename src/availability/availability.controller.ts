@@ -1,20 +1,7 @@
-import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AvailabilityService } from './availability.service';
-import {
-  CreateAvailabilityDto,
-  UpdateAvailabilityDto,
-  AvailableSlotsResponseDto,
-} from './dtos';
+import { CreateAvailabilityDto, UpdateAvailabilityDto, AvailableSlotsResponseDto } from './dtos';
 
 @ApiTags('Availability')
 @Controller('availability')
@@ -88,10 +75,6 @@ export class AvailabilityController {
     @Query('fromDate') fromDate: string,
     @Query('toDate') toDate: string,
   ): Promise<AvailableSlotsResponseDto[]> {
-    return this.availabilityService.findAvailableSlots(
-      calendarId,
-      new Date(fromDate),
-      new Date(toDate),
-    );
+    return this.availabilityService.findAvailableSlots(calendarId, new Date(fromDate), new Date(toDate));
   }
 }

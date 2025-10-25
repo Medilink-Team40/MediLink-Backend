@@ -11,15 +11,8 @@ export class NodemailerService {
   constructor(private configService: ConfigService) {
     const mailConfig = this.configService.get('notification.nodemailer');
 
-    if (
-      !mailConfig ||
-      !mailConfig.host ||
-      !mailConfig.auth.user ||
-      !mailConfig.auth.pass
-    ) {
-      this.logger.error(
-        'Nodemailer configuration is incomplete. Email sending may fail.',
-      );
+    if (!mailConfig || !mailConfig.host || !mailConfig.auth.user || !mailConfig.auth.pass) {
+      this.logger.error('Nodemailer configuration is incomplete. Email sending may fail.');
       // Optionally throw an error or disable the service if credentials are critical
     } else {
       this.transporter = nodemailer.createTransport({
@@ -35,10 +28,7 @@ export class NodemailerService {
 
       this.transporter.verify((error) => {
         if (error) {
-          this.logger.error(
-            'Error verifying Nodemailer transporter:',
-            error.message,
-          );
+          this.logger.error('Error verifying Nodemailer transporter:', error.message);
         } else {
           this.logger.log('Nodemailer transporter ready for sending emails.');
         }
@@ -48,16 +38,12 @@ export class NodemailerService {
 
   async sendMail(to: string, subject: string, html: string): Promise<any> {
     if (!this.transporter) {
-      this.logger.error(
-        'Nodemailer transporter not initialized due to missing configuration.',
-      );
+      this.logger.error('Nodemailer transporter not initialized due to missing configuration.');
       throw new Error('Nodemailer service not available.');
     }
     try {
       const info = await this.transporter.sendMail({
-        from: this.configService.get<string>(
-          'notification.nodemailer.auth.user',
-        ),
+        from: this.configService.get<string>('notification.nodemailer.auth.user'),
         to,
         subject,
         html,

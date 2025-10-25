@@ -1,10 +1,6 @@
-import {
-  ValidatorConstraint,
-  ValidatorConstraintInterface,
-  ValidationArguments,
-} from 'class-validator';
+import { ValidatorConstraint, ValidatorConstraintInterface, ValidationArguments } from 'class-validator';
 
-@ValidatorConstraint({ name: 'EqualsTo', async: false }) 
+@ValidatorConstraint({ name: 'EqualsTo', async: false })
 export class IsEqualsTo implements ValidatorConstraintInterface {
   validate(value: any, args: ValidationArguments) {
     const [relatedPropertyName] = args.constraints;

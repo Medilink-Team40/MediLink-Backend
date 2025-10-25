@@ -26,11 +26,7 @@ export class EmailProcessor extends WorkerHost {
 
     try {
       const payload = notification.payload as { subject: string; html: string };
-      await this.nodemailerService.sendMail(
-        notification.recipient,
-        payload.subject,
-        payload.html,
-      );
+      await this.nodemailerService.sendMail(notification.recipient, payload.subject, payload.html);
       await this.service.markAsSent(id);
     } catch (err: any) {
       await this.service.markAsFailed(id, err.message);

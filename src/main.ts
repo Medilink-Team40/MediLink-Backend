@@ -2,7 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { ValidationPipe } from '@nestjs/common';
-import { Exceptions } from './filters/exceptions/exceptions.filter';
+// import { Exceptions } from './filters/exceptions/exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -25,7 +25,8 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   // 🧱 Middlewares globales
-  app.useGlobalFilters(new Exceptions());
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  // app.useGlobalFilters(new Exceptions());
   app.useGlobalPipes(new ValidationPipe());
 
   const port = process.env.PORT || 3000;

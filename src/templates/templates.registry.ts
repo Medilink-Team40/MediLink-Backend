@@ -49,14 +49,10 @@ export const templates: {
     subject: 'Tu horario ha sido actualizado',
     message: 'Se realizaron cambios en la agenda médica.',
   }),
-  [NotificationEventType.APPOINTMENT_REMINDER]: (
-    data: AppointmentReminderPayload,
-  ) => ({
+  [NotificationEventType.APPOINTMENT_REMINDER]: (data: AppointmentReminderPayload) => ({
     subject: 'Recordatorio de cita',
     message: `Tienes una cita con el Dr. ${data.doctor} el ${data.date}.`,
   }),
-  [NotificationEventType.EXAM_RESULT_URL]:
-    examResultUrlTemplate as TemplateFunction<UrlPayload>,
-  [NotificationEventType.MEDICAL_RECIPE]:
-    medicalRecipeTemplate as TemplateFunction<RecipePayload>,
+  [NotificationEventType.EXAM_RESULT_URL]: examResultUrlTemplate as TemplateFunction<UrlPayload>,
+  [NotificationEventType.MEDICAL_RECIPE]: medicalRecipeTemplate as TemplateFunction<RecipePayload>,
 };

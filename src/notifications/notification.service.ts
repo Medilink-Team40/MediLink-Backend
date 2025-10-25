@@ -4,10 +4,7 @@ import { Repository } from 'typeorm';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { NotificationEntity } from './entities/notification.entity';
-import {
-  NotificationChannel,
-  NotificationEventType,
-} from './notification.types';
+import { NotificationChannel, NotificationEventType } from './notification.types';
 import { templates, TemplateOutput } from '../templates/templates.registry';
 import {
   AppointmentCreatedPayload,
@@ -64,9 +61,7 @@ export class NotificationService {
       throw new Error(`No existe plantilla para evento: ${event}`);
     }
 
-    const notificationContent = (
-      templateFn as (payload: EventPayloadMap[T]) => TemplateOutput
-    )(data); // Renombrado para claridad
+    const notificationContent = (templateFn as (payload: EventPayloadMap[T]) => TemplateOutput)(data); // Renombrado para claridad
 
     const notification = this.notificationRepo.create({
       type: event,
@@ -109,18 +104,14 @@ export class NotificationService {
         );
       }
       await this.markAsSent(saved.id);
-      this.logger.log(
-        `Notificación enviada exitosamente para ${recipient} vía ${channel}`,
-      );
+      this.logger.log(`Notificación enviada exitosamente para ${recipient} vía ${channel}`);
     } catch (error: unknown) {
       let errorMessage = 'An unknown error occurred';
       if (error instanceof Error) {
         errorMessage = error.message;
       }
       await this.markAsFailed(saved.id, errorMessage);
-      this.logger.error(
-        `Fallo al enviar notificación para ${recipient} vía ${channel}: ${errorMessage}`,
-      );
+      this.logger.error(`Fallo al enviar notificación para ${recipient} vía ${channel}: ${errorMessage}`);
     }
 
     // Aunque se intente enviar directamente, se sigue añadiendo a la cola para reintentos o procesamiento adicional
@@ -130,9 +121,7 @@ export class NotificationService {
       event,
     });
 
-    this.logger.log(
-      `🧾 Notificación creada (${event}) para ${recipient} vía ${channel}`,
-    );
+    this.logger.log(`🧾 Notificación creada (${event}) para ${recipient} vía ${channel}`);
     return saved;
   }
 
@@ -158,9 +147,7 @@ export class NotificationService {
       throw new Error(`No existe plantilla para evento: ${event}`);
     }
 
-    const notificationContent = (
-      templateFn as (payload: EventPayloadMap[T]) => TemplateOutput
-    )(data.payload); // El payload real para la plantilla
+    const notificationContent = (templateFn as (payload: EventPayloadMap[T]) => TemplateOutput)(data.payload); // El payload real para la plantilla
 
     const notification = this.notificationRepo.create({
       type: event,
@@ -202,18 +189,14 @@ export class NotificationService {
         );
       }
       await this.markAsSent(notification.id);
-      this.logger.log(
-        `Notificación enviada exitosamente para ${data.recipient} vía ${data.channel}`,
-      );
+      this.logger.log(`Notificación enviada exitosamente para ${data.recipient} vía ${data.channel}`);
     } catch (error: unknown) {
       let errorMessage = 'An unknown error occurred';
       if (error instanceof Error) {
         errorMessage = error.message;
       }
       await this.markAsFailed(notification.id, errorMessage);
-      this.logger.error(
-        `Fallo al enviar notificación para ${data.recipient} vía ${data.channel}: ${errorMessage}`,
-      );
+      this.logger.error(`Fallo al enviar notificación para ${data.recipient} vía ${data.channel}: ${errorMessage}`);
     }
 
     // Aunque se intente enviar directamente, se sigue añadiendo a la cola para reintentos o procesamiento adicional

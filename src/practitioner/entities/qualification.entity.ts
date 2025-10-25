@@ -1,13 +1,6 @@
 // src/practitioner/entities/practitioner-qualification.entity.ts
 
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  OneToMany,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
 import { PractitionerIdentifier } from '.';
 import type { QualificationCodes } from '../practitioner.types';
@@ -17,11 +10,7 @@ export class PractitionerQualification {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToMany(
-    () => PractitionerIdentifier,
-    (identifier) => identifier.practitioner,
-    { cascade: true },
-  )
+  @OneToMany(() => PractitionerIdentifier, (identifier) => identifier.practitioner, { cascade: true })
   identifier: PractitionerIdentifier[];
 
   @Column({ type: 'jsonb', nullable: false })

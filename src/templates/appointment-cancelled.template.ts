@@ -3,9 +3,7 @@ interface AppointmentCancelledData {
   appointmentId: string;
 }
 
-export const appointmentCancelledTemplate = (
-  data: AppointmentCancelledData,
-) => ({
+export const appointmentCancelledTemplate = (data: AppointmentCancelledData) => ({
   subject: 'Cita cancelada',
   message: `La cita programada con el Dr. ${data.doctorName} ha sido cancelada.`,
   meta: { appointmentId: data.appointmentId },

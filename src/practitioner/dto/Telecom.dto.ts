@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
 import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
 
-export class PractitionerTelecomDto  {
+export class PractitionerTelecomDto {
   @IsOptional()
   @IsUUID()
   id?: string;

@@ -1,10 +1,5 @@
 import { Type } from 'class-transformer';
-import {
-  IsDateString,
-  IsEnum,
-  IsNotEmpty,
-  ValidateNested,
-} from 'class-validator';
+import { IsDateString, IsEnum, IsNotEmpty, ValidateNested } from 'class-validator';
 import { NameStructDto } from '../NameStruct.dto';
 import { FHIRExternalGender } from 'src/practitioner/practitioner.types';
 

@@ -1,13 +1,6 @@
 // src/practitioner/entities/practitioner-telecom.entity.ts
 
-import {
-  Entity,
-  PrimaryGeneratedColumn,
-  Column,
-  ManyToOne,
-  JoinColumn,
-  Unique,
-} from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Unique } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
 import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
 
@@ -34,7 +27,7 @@ export class PractitionerTelecom {
   use: TelecomUses;
 
   @Column({ type: 'integer', nullable: false })
-  rank: number; 
+  rank: number;
 
   @ManyToOne(() => Practitioner, (practitioner) => practitioner.telecom, {
     onDelete: 'CASCADE',

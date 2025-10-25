@@ -1,9 +1,5 @@
 export function CatchError(errorHandler?: (error: any) => any) {
-  return function (
-    target: any,
-    propertyKey: string,
-    descriptor: PropertyDescriptor,
-  ) {
+  return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
     descriptor.value = function (...args: any[]) {
       try {
@@ -15,7 +11,7 @@ export function CatchError(errorHandler?: (error: any) => any) {
               return errorHandler(error);
             }
             console.error(`Error asíncrono en ${propertyKey}:`, error);
-            throw error;  
+            throw error;
           });
         }
 

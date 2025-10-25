@@ -7,10 +7,7 @@ import {
   ValidateIf,
   IsNumber, // Importar IsNumber
 } from 'class-validator';
-import {
-  NotificationChannel,
-  NotificationEventType,
-} from '../notification.types';
+import { NotificationChannel, NotificationEventType } from '../notification.types';
 import {
   AppointmentCreatedPayload,
   AppointmentCancelledPayload,
@@ -70,10 +67,7 @@ export class CreateNotificationDto {
       { $ref: '#/components/schemas/AppointmentReminderPayload' },
     ],
   })
-  @ValidateIf(
-    (o: CreateNotificationDto) =>
-      o.event !== NotificationEventType.DOCTOR_UPDATED_SCHEDULE,
-  )
+  @ValidateIf((o: CreateNotificationDto) => o.event !== NotificationEventType.DOCTOR_UPDATED_SCHEDULE)
   @IsObject()
   @IsNotEmpty({ message: 'El payload no puede estar vacío para este evento' })
   payload: EventPayload;

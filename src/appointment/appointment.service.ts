@@ -58,9 +58,7 @@ export class AppointmentService {
     const saved = await this.appointmentRepo.save(appointment);
 
     // Log de la cita creada
-    this.logger.log(
-      `📅 Cita creada: ${saved.id} - Paciente: ${saved.patientNameSnapshot} - Fecha: ${saved.startAt}`,
-    );
+    this.logger.log(`📅 Cita creada: ${saved.id} - Paciente: ${saved.patientNameSnapshot} - Fecha: ${saved.startAt}`);
 
     // 🔔 DISPARAR NOTIFICACIÓN DE CREACIÓN
     try {
@@ -145,18 +143,12 @@ export class AppointmentService {
 
     // Log del cambio de estado
     if (oldStatus !== updated.status) {
-      this.logger.log(
-        `📋 Estado de cita actualizado: ${id} - De: ${oldStatus} A: ${updated.status}`,
-      );
+      this.logger.log(`📋 Estado de cita actualizado: ${id} - De: ${oldStatus} A: ${updated.status}`);
 
       // 🔔 DISPARAR NOTIFICACIÓN SEGÚN EL CAMBIO DE ESTADO
       try {
-        const doctorEmail =
-          updated.doctor.telecom?.find((t) => t.system === 'email')?.value ||
-          updated.doctor.email;
-        const patientEmail =
-          updated.patient.telecom?.find((t) => t.system === 'email')?.value ||
-          updated.patient.email;
+        const doctorEmail = updated.doctor.telecom?.find((t) => t.system === 'email')?.value || updated.doctor.email;
+        const patientEmail = updated.patient.telecom?.find((t) => t.system === 'email')?.value || updated.patient.email;
 
         const doctorName = `${Array.isArray(updated.doctor.name[0]?.given) ? updated.doctor.name[0].given.join(' ') : updated.doctor.name[0]?.given} ${updated.doctor.name[0]?.family ?? ''}`;
 
@@ -181,92 +173,52 @@ export class AppointmentService {
         if (eventType) {
           if (doctorEmail) {
             if (eventType === NotificationEventType.APPOINTMENT_CANCELLED) {
-              await this.notificationService.createForEvent(
-                eventType,
-                doctorEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctorName,
-                  appointmentId: updated.id,
-                },
-              );
+              await this.notificationService.createForEvent(eventType, doctorEmail, NotificationChannel.EMAIL, {
+                doctorName,
+                appointmentId: updated.id,
+              });
             } else if (eventType === NotificationEventType.APPOINTMENT_RESCHEDULED) {
-              await this.notificationService.createForEvent(
-                eventType,
-                doctorEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctor: doctorName,
-                  date: updated.startAt.toISOString(),
-                },
-              );
+              await this.notificationService.createForEvent(eventType, doctorEmail, NotificationChannel.EMAIL, {
+                doctor: doctorName,
+                date: updated.startAt.toISOString(),
+              });
             } else if (eventType === NotificationEventType.APPOINTMENT_COMPLETED) {
-              await this.notificationService.createForEvent(
-                eventType,
-                doctorEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctor: doctorName,
-                  date: updated.startAt.toISOString(),
-                },
-              );
+              await this.notificationService.createForEvent(eventType, doctorEmail, NotificationChannel.EMAIL, {
+                doctor: doctorName,
+                date: updated.startAt.toISOString(),
+              });
             } else {
-              await this.notificationService.createForEvent(
-                eventType,
-                doctorEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctorName,
-                  date: updated.startAt.toISOString(),
-                  appointmentId: updated.id,
-                },
-              );
+              await this.notificationService.createForEvent(eventType, doctorEmail, NotificationChannel.EMAIL, {
+                doctorName,
+                date: updated.startAt.toISOString(),
+                appointmentId: updated.id,
+              });
             }
             this.logger.log(`📧 Notificación de ${message} enviada al doctor`);
           }
 
           if (patientEmail) {
             if (eventType === NotificationEventType.APPOINTMENT_CANCELLED) {
-              await this.notificationService.createForEvent(
-                eventType,
-                patientEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctorName,
-                  appointmentId: updated.id,
-                },
-              );
+              await this.notificationService.createForEvent(eventType, patientEmail, NotificationChannel.EMAIL, {
+                doctorName,
+                appointmentId: updated.id,
+              });
             } else if (eventType === NotificationEventType.APPOINTMENT_RESCHEDULED) {
-              await this.notificationService.createForEvent(
-                eventType,
-                patientEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctor: doctorName,
-                  date: updated.startAt.toISOString(),
-                },
-              );
+              await this.notificationService.createForEvent(eventType, patientEmail, NotificationChannel.EMAIL, {
+                doctor: doctorName,
+                date: updated.startAt.toISOString(),
+              });
             } else if (eventType === NotificationEventType.APPOINTMENT_COMPLETED) {
-              await this.notificationService.createForEvent(
-                eventType,
-                patientEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctor: doctorName,
-                  date: updated.startAt.toISOString(),
-                },
-              );
+              await this.notificationService.createForEvent(eventType, patientEmail, NotificationChannel.EMAIL, {
+                doctor: doctorName,
+                date: updated.startAt.toISOString(),
+              });
             } else {
-              await this.notificationService.createForEvent(
-                eventType,
-                patientEmail,
-                NotificationChannel.EMAIL,
-                {
-                  doctorName,
-                  date: updated.startAt.toISOString(),
-                  appointmentId: updated.id,
-                },
-              );
+              await this.notificationService.createForEvent(eventType, patientEmail, NotificationChannel.EMAIL, {
+                doctorName,
+                date: updated.startAt.toISOString(),
+                appointmentId: updated.id,
+              });
             }
             this.logger.log(`📧 Notificación de ${message} enviada al paciente`);
           }
@@ -285,18 +237,14 @@ export class AppointmentService {
 
     if (result.affected === 0) throw new NotFoundException('Cita no encontrada');
 
-    this.logger.log(
-      `🗑️ Cita eliminada: ${id} - Paciente: ${appointment.patientNameSnapshot}`,
-    );
+    this.logger.log(`🗑️ Cita eliminada: ${id} - Paciente: ${appointment.patientNameSnapshot}`);
 
     // 🔔 DISPARAR NOTIFICACIÓN DE ELIMINACIÓN/CANCELACIÓN
     try {
       const doctorEmail =
-        appointment.doctor.telecom?.find((t) => t.system === 'email')?.value ||
-        appointment.doctor.email;
+        appointment.doctor.telecom?.find((t) => t.system === 'email')?.value || appointment.doctor.email;
       const patientEmail =
-        appointment.patient.telecom?.find((t) => t.system === 'email')?.value ||
-        appointment.patient.email;
+        appointment.patient.telecom?.find((t) => t.system === 'email')?.value || appointment.patient.email;
 
       const doctorName = `${Array.isArray(appointment.doctor.name[0]?.given) ? appointment.doctor.name[0].given.join(' ') : appointment.doctor.name[0]?.given} ${appointment.doctor.name[0]?.family ?? ''}`;
 

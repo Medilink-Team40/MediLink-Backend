@@ -54,6 +54,4 @@ export interface UpdateProfile {
 
 export type ProfileModuleValues = keyof UpdateProfile;
 
-export type AvailableUpdates = Record<ProfileModuleValues, (data: UpdateProfile[keyof UpdateProfile]) => void>
-
-
+export type AvailableUpdates = Record<ProfileModuleValues, (data: UpdateProfile[keyof UpdateProfile]) => void>;

@@ -64,11 +64,7 @@ export class AvailabilityService {
     if (result.affected === 0) throw new NotFoundException('Regla no encontrada');
   }
 
-  async findAvailableSlots(
-    calendarId: string,
-    fromDate: Date,
-    toDate: Date,
-  ): Promise<AvailableSlotsResponseDto[]> {
+  async findAvailableSlots(calendarId: string, fromDate: Date, toDate: Date): Promise<AvailableSlotsResponseDto[]> {
     const calendar = await this.calendarRepo.findOne({
       where: { id: calendarId },
       relations: ['availabilityRules'],

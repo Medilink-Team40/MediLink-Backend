@@ -29,10 +29,7 @@ export class PushProcessor extends WorkerHost {
 
     try {
       // TODO: integrar con Firebase / OneSignal
-      console.log(
-        `🔔 Enviando push a ${notification.recipient}`,
-        notification.payload,
-      );
+      console.log(`🔔 Enviando push a ${notification.recipient}`, notification.payload);
 
       await this.service.markAsSent(id);
     } catch (err: any) {

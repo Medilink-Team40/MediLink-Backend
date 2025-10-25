@@ -110,7 +110,7 @@ export class KeyCloakService {
   }
 
   public async createUserAndAssignRole(user: KeycloakCreateDto, role: RolesTypes): Promise<string> {
-    console.log("🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ user:", user)
+    console.log('🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ user:', user);
     const token = this.token ?? (await this.getToken());
     const realm = this.config.get('KEYCLOAK_TARGET_REALM');
     const userCreationUrl = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/users`;
@@ -123,7 +123,7 @@ export class KeyCloakService {
       })
       .toPromise();
 
-    console.log("🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ createResponse:", createResponse)
+    console.log('🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ createResponse:', createResponse);
     if (!createResponse) throw new Error('');
 
     const newUserId = createResponse.headers.location.split('/').pop();

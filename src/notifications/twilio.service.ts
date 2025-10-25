@@ -9,20 +9,12 @@ export class TwilioService {
   private twilioPhoneNumber: string;
 
   constructor(private configService: ConfigService) {
-    const accountSid = this.configService.get<string>(
-      'notification.twilio.accountSid',
-    );
-    const authToken = this.configService.get<string>(
-      'notification.twilio.authToken',
-    );
-    const phoneNumber = this.configService.get<string>(
-      'notification.twilio.phoneNumber',
-    );
+    const accountSid = this.configService.get<string>('notification.twilio.accountSid');
+    const authToken = this.configService.get<string>('notification.twilio.authToken');
+    const phoneNumber = this.configService.get<string>('notification.twilio.phoneNumber');
 
     if (!accountSid || !authToken || !phoneNumber) {
-      this.logger.error(
-        'Twilio credentials are not fully configured. SMS sending may fail.',
-      );
+      this.logger.error('Twilio credentials are not fully configured. SMS sending may fail.');
       // Optionally throw an error or disable the service if credentials are critical
     } else {
       this.twilioClient = new twilio.Twilio(accountSid, authToken);
@@ -32,9 +24,7 @@ export class TwilioService {
 
   async sendSms(to: string, body: string): Promise<any> {
     if (!this.twilioClient) {
-      this.logger.error(
-        'Twilio client not initialized due to missing credentials.',
-      );
+      this.logger.error('Twilio client not initialized due to missing credentials.');
       throw new Error('Twilio service not available.');
     }
     try {
@@ -49,9 +39,7 @@ export class TwilioService {
       if (error instanceof Error) {
         this.logger.error(`Failed to send SMS to ${to}: ${error.message}`);
       } else {
-        this.logger.error(
-          `Failed to send SMS to ${to}: An unknown error occurred`,
-        );
+        this.logger.error(`Failed to send SMS to ${to}: An unknown error occurred`);
       }
       throw error;
     }
