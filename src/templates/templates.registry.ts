@@ -15,7 +15,7 @@ import {
   UrlPayload,
   RecipePayload,
 } from './template.types';
-import { NotificationEventType } from 'src/notifications/notification.types';
+import { NotificationEventType } from '../notifications/notification.types';
 
 export type TemplateOutput = {
   subject: string;
