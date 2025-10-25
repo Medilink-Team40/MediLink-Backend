@@ -2,8 +2,8 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AvailabilityRule } from './entity/availability.entity';
-import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
-import { AppointmentEntity } from '@app/appointment/entity/appointment.entity';
+import { CalendarEntity } from '../calendar/entity/calendar.entity';
+import { AppointmentEntity } from '../appointment/entity/appointment.entity';
 import { CreateAvailabilityDto } from './dtos/create-availability.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
 import { AvailableSlotsResponseDto, AvailableSlotDto } from './dtos/available-slots.dto';
@@ -76,7 +76,7 @@ export class AvailabilityService {
     const slotMinutes = calendar.defaultSlotMinutes || 15;
     const result: AvailableSlotsResponseDto[] = [];
 
-    let currentDate = new Date(fromDate);
+    const currentDate = new Date(fromDate);
     currentDate.setHours(0, 0, 0, 0);
 
     while (currentDate <= toDate) {

@@ -3,10 +3,9 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppointmentEntity } from './entity/appointment.entity';
 import { AppointmentController } from './appointment.controller';
 import { AppointmentService } from './appointment.service';
-import { Practitioner } from '@app/practitioner/entities';
-import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
-import { NotificationModule } from '@app/notifications/notification.module';
-
+import { Practitioner } from '../practitioner/entities';
+import { NotificationModule } from '../notifications/notification.module';
+import { CalendarEntity } from '../calendar/entity/calendar.entity';
 @Module({
   imports: [TypeOrmModule.forFeature([AppointmentEntity, Practitioner, CalendarEntity]), NotificationModule],
   controllers: [AppointmentController],

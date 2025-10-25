@@ -2,9 +2,9 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotificationService } from '@app/notifications/notification.service';
-import { TwilioService } from '@app/notifications/twilio.service';
-import { NotificationEntity } from '@app/notifications/entities/notification.entity';
+import { NotificationService } from '../notifications/notification.service';
+import { TwilioService } from '../notifications/twilio.service';
+import { NotificationEntity } from '../notifications/entities/notification.entity';
 
 @Processor('notifications')
 export class SmsProcessor extends WorkerHost {

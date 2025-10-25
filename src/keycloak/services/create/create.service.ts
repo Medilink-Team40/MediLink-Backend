@@ -1,9 +1,11 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RolesTypes } from '@app/auth/auth.types';
-import { KeycloakCreateDto } from '@app/keycloak/dto/KeycloakDto';
-import { GetRole, GetToken } from '@app/keycloak/keycloak.types';
+import { RolesTypes } from '../../../auth/auth.types';
+import { GetRole } from '../../keycloak.types';
+import { GetToken } from '../../keycloak.types';
+import { KeycloakCreateDto } from '../../dto/KeycloakDto';
+// import { GetRole, GetToken } from '../../../keycloak.types';
 
 @Injectable()
 export class KeyCloakService {
@@ -17,8 +19,8 @@ export class KeyCloakService {
   private async getToken() {
     const params = {
       grant_type: 'client_credentials',
-      client_id: this.config.get('KEYCLOAK_ADMIN_CLIENT_ID'),
-      client_secret: this.config.get('KEYCLOAK_ADMIN_CLIENT_SECRET'),
+      client_id: this.config.get('KEYCLOAK_ADMIN_CLIENT_ID') as string,
+      client_secret: this.config.get('KEYCLOAK_ADMIN_CLIENT_SECRET') as string,
     };
 
     const data = new URLSearchParams(params).toString();
@@ -44,8 +46,8 @@ export class KeyCloakService {
 
   private async getRoleDetails(roleName: RolesTypes): Promise<GetRole> {
     const token = this.token ?? (await this.getToken());
-    const realm = this.config.get('KEYCLOAK_TARGET_REALM');
-    const clientUuid = this.config.get('KEYCLOAK_ADMIN_CLIENT_UUID');
+    const realm = this.config.get('KEYCLOAK_TARGET_REALM') as string;
+    const clientUuid = this.config.get('KEYCLOAK_ADMIN_CLIENT_UUID') as string;
     const roleUrl = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/clients/${clientUuid}/roles/${roleName.toLowerCase()}`;
 
     const response = await this.http
@@ -66,8 +68,8 @@ export class KeyCloakService {
   private async assignRoleToUser(userId: string, roleName: RolesTypes): Promise<void> {
     const token = this.token ?? (await this.getToken());
     const roleDetails = await this.getRoleDetails(roleName);
-    const realm = this.config.get('KEYCLOAK_TARGET_REALM');
-    const clientUuid = this.config.get('KEYCLOAK_ADMIN_CLIENT_UUID');
+    const realm = this.config.get('KEYCLOAK_TARGET_REALM') as string;
+    const clientUuid = this.config.get('KEYCLOAK_ADMIN_CLIENT_UUID') as string;
     const mappingUrl = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/users/${userId}/role-mappings/clients/${clientUuid}`;
     const roleBody = [
       {
@@ -112,7 +114,7 @@ export class KeyCloakService {
   public async createUserAndAssignRole(user: KeycloakCreateDto, role: RolesTypes): Promise<string> {
     console.log('🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ user:', user);
     const token = this.token ?? (await this.getToken());
-    const realm = this.config.get('KEYCLOAK_TARGET_REALM');
+    const realm = this.config.get('KEYCLOAK_TARGET_REALM') as string;
     const userCreationUrl = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/users`;
     const createResponse = await this.http
       .post(userCreationUrl, user, {
@@ -126,7 +128,7 @@ export class KeyCloakService {
     console.log('🚀 ~ KeyCloakService ~ createUserAndAssignRole ~ createResponse:', createResponse);
     if (!createResponse) throw new Error('');
 
-    const newUserId = createResponse.headers.location.split('/').pop();
+    const newUserId = createResponse.headers.location.split('/').pop() as string;
 
     await this.assignRoleToUser(newUserId, role);
     return newUserId;

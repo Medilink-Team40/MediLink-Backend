@@ -8,12 +8,12 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { UserBaseCreation } from '@app/types/user.types';
+import { UserBaseCreation } from '../../types/user.types';
 import { FHIRExternalGender } from '../practitioner.types';
 import { Type } from 'class-transformer';
 import { NameStructDto } from './NameStruct.dto';
 import { PractitionerTelecomDto } from './Telecom.dto';
-import { EqualsTo } from '@app/decorators/equals-to.decorator';
+import { EqualsTo } from '../../decorators/equals-to.decorator';
 import { HasRankOne } from '../decorators/class-validator/HasRankOneTelecom';
 import { NoDuplicateEmailInTelecom } from '../decorators/class-validator/NoDuplicateEmailInTelecom';
 

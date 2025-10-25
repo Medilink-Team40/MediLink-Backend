@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import { IsDateString, IsEnum, IsNotEmpty, ValidateNested } from 'class-validator';
 import { NameStructDto } from '../NameStruct.dto';
-import { FHIRExternalGender } from '@app/practitioner/practitioner.types';
+import { FHIRExternalGender } from '../../practitioner.types';
 
 export class UpdateBasicDataDto {
   @ValidateNested()

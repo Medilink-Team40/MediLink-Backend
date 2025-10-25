@@ -2,9 +2,9 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotificationEntity } from '@app/notifications/entities/notification.entity';
-import { NotificationService } from '@app/notifications/notification.service';
-import { NodemailerService } from '@app/notifications/nodemailer.service';
+import { NotificationEntity } from '../notifications/entities/notification.entity';
+import { NotificationService } from '../notifications/notification.service';
+import { NodemailerService } from '../notifications/nodemailer.service';
 
 @Processor('notifications')
 export class EmailProcessor extends WorkerHost {

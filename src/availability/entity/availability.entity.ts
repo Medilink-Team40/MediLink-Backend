@@ -1,4 +1,4 @@
-import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
+import { CalendarEntity } from '../../calendar/entity/calendar.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity('availability_rules')

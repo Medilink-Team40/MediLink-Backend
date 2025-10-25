@@ -2,8 +2,8 @@ import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { NotificationEntity } from '@app/notifications/entities/notification.entity';
-import { NotificationService } from '@app/notifications/notification.service';
+import { NotificationEntity } from '../notifications/entities/notification.entity';
+import { NotificationService } from '../notifications/notification.service';
 
 interface PushJobData {
   id: string;

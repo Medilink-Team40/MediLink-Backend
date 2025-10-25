@@ -1,15 +1,22 @@
 import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RolesTypes } from '@app/auth/auth.types';
-import { PractitionerRegisterDto } from '@app/practitioner/dto/PractitionerRegisterDto';
-import { PractitionerTelecomDto } from '@app/practitioner/dto/Telecom.dto';
-import { UpdateBasicDataDto } from '@app/practitioner/dto/update/UpdateBasicData.dto';
-import { UpdateProfileDto } from '@app/practitioner/dto/update/UpdateProfile.dto';
-import { PractitionerQualificationDto } from '@app/practitioner/dto/update/UpdateQualifications.dto';
-import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from '@app/practitioner/entities';
-import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '@app/practitioner/errors.codes';
-import { AvailableUpdates, UpdateProfile } from '@app/practitioner/practitioner.types';
+import { RolesTypes } from '../../../auth/auth.types';
+// import { PractitionerRegisterDto } from '../../../dto/PractitionerRegisterDto';
+// import { PractitionerTelecomDto } from '../../../dto/Telecom.dto';
+// import { UpdateBasicDataDto } from '../../../dto/update/UpdateBasicData.dto';
+// import { UpdateProfileDto } from '../../../dto/update/UpdateProfile.dto';
+// import { PractitionerQualificationDto } from '../../../dto/update/UpdateQualifications.dto';
+// import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from '../../../entities';
+// import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../../errors.codes';
 import { Repository } from 'typeorm';
+import { PractitionerRegisterDto } from '../../../practitioner/dto/PractitionerRegisterDto';
+import { PractitionerTelecomDto } from '../../../practitioner/dto/Telecom.dto';
+import { UpdateBasicDataDto } from '../../../practitioner/dto/update/UpdateBasicData.dto';
+import { UpdateProfileDto } from '../../../practitioner/dto/update/UpdateProfile.dto';
+import { PractitionerQualificationDto } from '../../../practitioner/dto/update/UpdateQualifications.dto';
+import { Practitioner, PractitionerTelecom, PractitionerIdentifier } from '../../../practitioner/entities';
+import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../../practitioner/errors.codes';
+import { AvailableUpdates, UpdateProfile } from '../../../practitioner/practitioner.types';
 
 @Injectable()
 export class PractitionerService {

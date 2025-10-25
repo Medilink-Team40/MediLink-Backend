@@ -1,14 +1,14 @@
 import { Body, Controller, Patch, Post, Request, UseGuards } from '@nestjs/common';
-import { RolesTypes } from '@app/auth/auth.types';
-import { KeyCloakService } from '@app/keycloak/services/create/create.service';
+import { RolesTypes } from '../../auth/auth.types';
+import { KeyCloakService } from '../../keycloak/services/create/create.service';
 import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
-import { CatchError } from '@app/decorators/errors.decorator';
-import { KeycloakCreateDto } from '@app/keycloak/dto/KeycloakDto';
+import { CatchError } from '../../decorators/errors.decorator';
+import { KeycloakCreateDto } from '../../keycloak/dto/KeycloakDto';
 import { PractitionerService } from '../service/practitioner/practitioner.service';
-import { Roles } from '@app/auth/roles/roles.decorator';
+import { Roles } from '../../auth/roles/roles.decorator';
 import { UpdateProfileDto } from '../dto/update/UpdateProfile.dto';
 import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '@app/auth/roles/roles.guard';
+import { RolesGuard } from '../../auth/roles/roles.guard';
 import { AccountOwnerGuard } from '../guards/account-owner/account-owner.guard';
 
 @Controller('practitioner')

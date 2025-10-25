@@ -1,11 +1,11 @@
-import { IsArray, IsEmail, IsNotEmpty, ValidateNested } from 'class-validator';
+import { IsArray, ValidateNested } from 'class-validator';
 import { UpdateBasicDataDto } from './UpdateBasicData.dto';
 import { Type } from 'class-transformer';
 import { PractitionerTelecomDto } from '../Telecom.dto';
 import { PractitionerQualificationDto } from './UpdateQualifications.dto';
-import { PractitionerIdentifier } from '@app/practitioner/entities';
-import { UpdateProfile } from '@app/practitioner/practitioner.types';
-import { HasRankOne } from '@app/practitioner/decorators/class-validator/HasRankOneTelecom';
+import { PractitionerIdentifier } from '../../entities';
+import { UpdateProfile } from '../../practitioner.types';
+import { HasRankOne } from '../../decorators/class-validator/HasRankOneTelecom';
 
 export class UpdateProfileDto implements UpdateProfile {
   @ValidateNested()
