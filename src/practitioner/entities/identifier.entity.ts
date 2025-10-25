@@ -1,5 +1,3 @@
-// src/practitioner/entities/practitioner-identifier.entity.ts
-
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
 import { FHIRIdentifierUse } from '../practitioner.types';

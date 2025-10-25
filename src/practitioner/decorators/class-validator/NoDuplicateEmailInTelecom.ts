@@ -1,4 +1,3 @@
-// src/common/validators/no-duplicate-email-in-telecom.validator.ts
 import {
   registerDecorator,
   ValidationOptions,
@@ -6,7 +5,7 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
-import { PractitionerTelecomDto } from 'src/practitioner/dto/Telecom.dto';
+import { PractitionerTelecomDto } from '@app/practitioner/dto/Telecom.dto';
 
 @ValidatorConstraint({ async: false })
 export class NoDuplicateEmailInTelecomConstraint implements ValidatorConstraintInterface {

@@ -1,14 +1,14 @@
 import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RolesTypes } from 'src/auth/auth.types';
-import { PractitionerRegisterDto } from 'src/practitioner/dto/PractitionerRegisterDto';
-import { PractitionerTelecomDto } from 'src/practitioner/dto/Telecom.dto';
-import { UpdateBasicDataDto } from 'src/practitioner/dto/update/UpdateBasicData.dto';
-import { UpdateProfileDto } from 'src/practitioner/dto/update/UpdateProfile.dto';
-import { PractitionerQualificationDto } from 'src/practitioner/dto/update/UpdateQualifications.dto';
-import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from 'src/practitioner/entities';
-import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from 'src/practitioner/errors.codes';
-import { AvailableUpdates, UpdateProfile } from 'src/practitioner/practitioner.types';
+import { RolesTypes } from '@app/auth/auth.types';
+import { PractitionerRegisterDto } from '@app/practitioner/dto/PractitionerRegisterDto';
+import { PractitionerTelecomDto } from '@app/practitioner/dto/Telecom.dto';
+import { UpdateBasicDataDto } from '@app/practitioner/dto/update/UpdateBasicData.dto';
+import { UpdateProfileDto } from '@app/practitioner/dto/update/UpdateProfile.dto';
+import { PractitionerQualificationDto } from '@app/practitioner/dto/update/UpdateQualifications.dto';
+import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from '@app/practitioner/entities';
+import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '@app/practitioner/errors.codes';
+import { AvailableUpdates, UpdateProfile } from '@app/practitioner/practitioner.types';
 import { Repository } from 'typeorm';
 
 @Injectable()

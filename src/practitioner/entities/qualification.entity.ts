@@ -1,5 +1,3 @@
-// src/practitioner/entities/practitioner-qualification.entity.ts
-
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, OneToMany } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
 import { PractitionerIdentifier } from '.';

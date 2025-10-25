@@ -1,9 +1,9 @@
 import { HttpService } from '@nestjs/axios';
 import { HttpStatus, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { RolesTypes } from 'src/auth/auth.types';
-import { KeycloakCreateDto } from 'src/keycloak/dto/KeycloakDto';
-import { GetRole, GetToken } from 'src/keycloak/keycloak.types';
+import { RolesTypes } from '@app/auth/auth.types';
+import { KeycloakCreateDto } from '@app/keycloak/dto/KeycloakDto';
+import { GetRole, GetToken } from '@app/keycloak/keycloak.types';
 
 @Injectable()
 export class KeyCloakService {

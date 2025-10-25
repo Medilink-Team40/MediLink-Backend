@@ -1,8 +1,8 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, UpdateDateColumn, Index } from 'typeorm';
 
 import { ApiProperty } from '@nestjs/swagger';
-import { CalendarEntity } from 'src/calendar/entity/calendar.entity';
-import { Practitioner } from 'src/practitioner/entities/practitioner.entity';
+import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
+import { Practitioner } from '@app/practitioner/entities/practitioner.entity';
 
 export enum AppointmentType {
   PRESENTIAL = 'presential',

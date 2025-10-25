@@ -2,8 +2,8 @@ import { Injectable, NotFoundException, BadRequestException } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { AvailabilityRule } from './entity/availability.entity';
-import { CalendarEntity } from 'src/calendar/entity/calendar.entity';
-import { AppointmentEntity } from 'src/appointment/entity/appointment.entity';
+import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
+import { AppointmentEntity } from '@app/appointment/entity/appointment.entity';
 import { CreateAvailabilityDto } from './dtos/create-availability.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
 import { AvailableSlotsResponseDto, AvailableSlotDto } from './dtos/available-slots.dto';

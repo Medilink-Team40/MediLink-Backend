@@ -1,7 +1,7 @@
-import { UserBaseCreation } from 'src/types/user.types';
+import { UserBaseCreation } from '@app/types/user.types';
 import { Credentials } from '../keycloak.types';
-import { RolesTypes } from 'src/auth/auth.types';
-import { toKeycloakName } from 'src/practitioner/adapter/toKeycloakName.adapter';
+import { RolesTypes } from '@app/auth/auth.types';
+import { toKeycloakName } from '@app/practitioner/adapter/toKeycloakName.adapter';
 
 export class KeycloakCreateDto {
   public username: string;

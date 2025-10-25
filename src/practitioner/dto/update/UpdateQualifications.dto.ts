@@ -1,5 +1,3 @@
-// src/practitioner/dto/PractitionerQualificationDto.ts
-
 import {
   IsUUID,
   IsArray,

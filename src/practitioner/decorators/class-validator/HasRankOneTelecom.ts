@@ -1,4 +1,3 @@
-// src/common/decorators/has-rank-one.decorator.ts
 import {
   registerDecorator,
   ValidationOptions,

@@ -1,6 +1,6 @@
-import { AppointmentEntity } from 'src/appointment/entity/appointment.entity';
-import { AvailabilityRule } from 'src/availability/entity/availability.entity';
-import { Practitioner } from 'src/practitioner/entities';
+import { AppointmentEntity } from '@app/appointment/entity/appointment.entity';
+import { AvailabilityRule } from '@app/availability/entity/availability.entity';
+import { Practitioner } from '@app/practitioner/entities';
 import {
   Column,
   CreateDateColumn,

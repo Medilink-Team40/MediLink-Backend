@@ -1,5 +1,3 @@
-// src/practitioner/entities/practitioner-telecom.entity.ts
-
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Unique } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
 import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';

@@ -1,5 +1,4 @@
-// src/modules/availability/availability.entity.ts
-import { CalendarEntity } from 'src/calendar/entity/calendar.entity';
+import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
 
 @Entity('availability_rules')

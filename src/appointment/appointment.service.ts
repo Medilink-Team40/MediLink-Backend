@@ -1,13 +1,13 @@
 import { Injectable, NotFoundException, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AppointmentEntity, AppointmentStatus } from './entity/appointment.entity';
-import { Practitioner } from 'src/practitioner/entities/practitioner.entity';
+import { AppointmentEntity } from './entity/appointment.entity';
+import { Practitioner } from '@app/practitioner/entities/practitioner.entity';
 import { CreateAppointmentDto } from './dtos/create-appointment.dto';
 import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
-import { CalendarEntity } from 'src/calendar/entity/calendar.entity';
-import { NotificationService } from 'src/notifications/notification.service';
-import { NotificationChannel, NotificationEventType } from 'src/notifications/notification.types';
+import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
+import { NotificationService } from '@app/notifications/notification.service';
+import { NotificationChannel, NotificationEventType } from '@app/notifications/notification.types';
 
 @Injectable()
 export class AppointmentService {

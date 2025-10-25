@@ -1,4 +1,4 @@
-import { NameStructDto } from 'src/practitioner/dto/NameStruct.dto';
+import { NameStructDto } from "@app/practitioner/dto/NameStruct.dto";
 
 export interface UserBaseCreation {
   email: string;

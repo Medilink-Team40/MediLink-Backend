@@ -4,9 +4,9 @@ import { BullModule } from '@nestjs/bullmq';
 import { NotificationService } from './notification.service';
 import { NotificationController } from './notification.controller';
 import { NotificationEntity } from './entities/notification.entity';
-import { EmailProcessor } from 'src/processors/email.processor';
-import { SmsProcessor } from 'src/processors/sms.processor';
-import { PushProcessor } from 'src/processors/push.processor';
+import { EmailProcessor } from '@app/processors/email.processor';
+import { SmsProcessor } from '@app/processors/sms.processor';
+import { PushProcessor } from '@app/processors/push.processor';
 import { TwilioService } from './twilio.service';
 import { NodemailerService } from './nodemailer.service';
 

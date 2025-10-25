@@ -1,12 +1,10 @@
-// src/practitioner/entities/practitioner.entity.ts
-
 import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique, PrimaryColumn, OneToOne } from 'typeorm';
 import { PractitionerQualification, PractitionerTelecom, PractitionerIdentifier } from './';
 import { FHIRExternalGender } from '../practitioner.types';
 import type { NameStruct } from '../practitioner.types';
-import { RolesTypes } from 'src/auth/auth.types';
-import { CalendarEntity } from 'src/calendar/entity/calendar.entity';
-import { AppointmentEntity } from 'src/appointment/entity/appointment.entity';
+import { RolesTypes } from '@app/auth/auth.types';
+import { CalendarEntity } from '@app/calendar/entity/calendar.entity';
+import { AppointmentEntity } from '@app/appointment/entity/appointment.entity';
 
 @Entity('practitioner')
 @Unique(['email'])
