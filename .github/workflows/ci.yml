@@ -42,13 +42,9 @@ jobs:
       - name: Build backend
         run: npm run build
 
-      # # 6️⃣ Reiniciar el servicio con PM2 o Docker (según tu entorno)
-      # - name: Restart application
-      #   run: |
-      #     pm2 delete medilink || true
-      #     pm2 start dist/main.js --name "medilink"
+      # 🚀 Desplegar con PM2
+      - name: Reload PM2
+        run: |
+          pm2 reload medilink
 
-      # # 7️⃣ (Opcional) Verificar estado del servicio
-      # - name: Verify deployment
-      #   run: pm2 status medilink
 
