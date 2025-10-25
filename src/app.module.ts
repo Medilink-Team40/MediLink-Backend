@@ -1,8 +1,6 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import configuration from './config/configuration';
-import notificationConfig from './config/notification.config';
 import { BullBoardConfigModule } from './bull-board/bull-board.module';
 import { BullMQModule } from './bullmq/bullmq.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
@@ -13,7 +11,9 @@ import { ConfigModule } from '@nestjs/config';
 import { PractitionerModule } from './practitioner/practitioner.module';
 import { KeycloakModule } from './keycloak/keycloak.module';
 import { HttpModule } from '@nestjs/axios';
-import { PractitionerController } from './practitioner/controllers/practitioner.controller';
+import { CalendarModule } from './calendar/calendar.module';
+import { AvailabilityModule } from './availability/availability.module';
+import { AppointmentModule } from './appointment/appointment.module';
 
 @Module({
   imports: [
@@ -25,12 +25,15 @@ import { PractitionerController } from './practitioner/controllers/practitioner.
     TypeOrmModule.forRootAsync({
       useClass: TypeOrmConfigService,
     }),
-   // BullMQModule,
-   // BullBoardConfigModule,
-   // NotificationModule,
+    BullMQModule,
+    BullBoardConfigModule,
+    NotificationModule,
     HttpModule,
     PractitionerModule,
     KeycloakModule,
+    CalendarModule,
+    AvailabilityModule,
+    AppointmentModule,
   ],
   controllers: [],
   providers: [AppService],

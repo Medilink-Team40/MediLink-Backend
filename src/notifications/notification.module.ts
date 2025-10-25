@@ -18,14 +18,7 @@ import { NodemailerService } from './nodemailer.service';
     }),
   ],
   controllers: [NotificationController],
-  providers: [
-    NotificationService,
-    EmailProcessor,
-    SmsProcessor,
-    PushProcessor,
-    TwilioService,
-    NodemailerService,
-  ],
+  providers: [NotificationService, EmailProcessor, SmsProcessor, PushProcessor, TwilioService, NodemailerService],
   exports: [NotificationService],
 })
 export class NotificationModule {}

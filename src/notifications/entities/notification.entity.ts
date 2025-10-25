@@ -57,6 +57,16 @@ export class NotificationEntity {
   @Column({ type: 'text', nullable: true })
   error?: string;
 
+  // ✅ Nuevo campo para marcar si la notificación fue leída
+  @ApiProperty({ description: 'Indica si la notificación fue leída', default: false })
+  @Column({ type: 'boolean', default: false })
+  isRead: boolean;
+
+  // ✅ Nuevo campo para registrar cuándo se leyó
+  @ApiProperty({ description: 'Fecha en que la notificación fue leída', nullable: true })
+  @Column({ type: 'timestamp', nullable: true })
+  readAt?: Date;
+
   @ApiProperty({ description: 'Fecha de creación de la notificación' })
   @CreateDateColumn({ name: 'created_at' })
   createdAt: Date;

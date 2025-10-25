@@ -28,6 +28,4 @@ export default () => ({
 Logger.log(
   `Configuración de Redis cargada: Host=${process.env.REDIS_HOST}, Port=${parseInt(process.env.REDIS_PORT as string, 10) || 6379}, Password=${process.env.REDIS_PASSWORD ? '******' : 'N/A'}`,
 );
-Logger.log(
-  `Configuración de Base de Datos cargada: URL=${process.env.POSTGRES_URL}`,
-);
+Logger.log(`Configuración de Base de Datos cargada: URL=${process.env.POSTGRES_URL}`);

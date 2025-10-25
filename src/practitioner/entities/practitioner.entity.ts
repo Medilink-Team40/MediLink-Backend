@@ -1,10 +1,12 @@
 // src/practitioner/entities/practitioner.entity.ts
 
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique, PrimaryColumn } from 'typeorm';
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Unique, PrimaryColumn, OneToOne } from 'typeorm';
 import { PractitionerQualification, PractitionerTelecom, PractitionerIdentifier } from './';
 import { FHIRExternalGender } from '../practitioner.types';
 import type { NameStruct } from '../practitioner.types';
 import { RolesTypes } from 'src/auth/auth.types';
+import { CalendarEntity } from 'src/calendar/entity/calendar.entity';
+import { AppointmentEntity } from 'src/appointment/entity/appointment.entity';
 
 @Entity('practitioner')
 @Unique(['email'])
@@ -48,6 +50,18 @@ export class Practitioner {
     cascade: true,
   })
   telecom: PractitionerTelecom[];
+
+  @OneToOne(() => CalendarEntity, (cal) => cal.practitioner, {
+    cascade: true,
+    onDelete: 'CASCADE',
+  })
+  calendar?: CalendarEntity;
+
+  @OneToMany(() => AppointmentEntity, (appt) => appt.doctor)
+  appointmentsAsDoctor?: AppointmentEntity[];
+
+  @OneToMany(() => AppointmentEntity, (appt) => appt.patient)
+  appointmentsAsPatient?: AppointmentEntity[];
 
   @OneToMany(() => PractitionerQualification, (qualification) => qualification.practitioner, { cascade: true })
   qualification: PractitionerQualification[];
