@@ -1,14 +1,22 @@
-name: Deploy to Render
 
 on:
+  pull_request:
   push:
-    branches:
-      - develop
+    branches: [main]
 
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
     steps:
-      - name: Trigger Render deploy
+      - uses: actions/checkout@v5
+      - name: Test
         run: |
-          curl -X POST ${{ secrets.RENDER_DEPLOY_HOOK }}
+          npm install
+          npm run test
+
+      - name: Deploy
+        if: github.ref == 'refs/heads/main'
+        env:
+          deploy_url: ${{ secrets.RENDER_DEPLOY_HOOK }}
+        run: |
+          curl "$deploy_url"

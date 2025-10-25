@@ -7,6 +7,14 @@ import { Exceptions } from './filters/exceptions/exceptions.filter';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.enableCors({
+    origin: ['https://medi-link-frotend-mk1u.vercel.app/', '*'],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  });
+
+  // 📘 Swagger config
   const config = new DocumentBuilder()
     .setTitle('MediLink API')
     .setDescription('La API de MediLink para la gestión de citas médicas.')
@@ -16,10 +24,14 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('api', app, document);
 
+  // 🧱 Middlewares globales
   app.useGlobalFilters(new Exceptions());
   app.useGlobalPipes(new ValidationPipe());
+
   const port = process.env.PORT || 3000;
   await app.listen(port, '0.0.0.0');
+
+  console.log(`🚀 Servidor corriendo en el puerto ${port}`);
 }
 bootstrap().catch((err) => {
   console.error('Error al iniciar la aplicación:', err);
