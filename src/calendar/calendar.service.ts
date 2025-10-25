@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CalendarEntity } from './entity/calendar.entity';
 import { AppointmentEntity } from '@app/appointment/entity/appointment.entity';
-import { Practitioner } from '@ap/practitioner/entities/practitioner.entity';
+import { Practitioner } from '@app/practitioner/entities/practitioner.entity';
 import { CreateCalendarDto } from './dtos/create-calendar.dto';
 import { UpdateCalendarDto } from './dtos/update-calendar.dto';
 import { CalendarDayViewDto, CalendarWeekViewDto } from './dtos/calendar-view.dto';
