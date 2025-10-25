@@ -18,9 +18,6 @@ import {
 } from '../../templates/template.types';
 import { ApiProperty } from '@nestjs/swagger';
 
-/* eslint-disable @typescript-eslint/no-unsafe-call */
-/* eslint-disable @typescript-eslint/no-unsafe-argument */
-
 type EventPayloadMap = {
   [NotificationEventType.APPOINTMENT_CREATED]: AppointmentCreatedPayload;
   [NotificationEventType.APPOINTMENT_CANCELLED]: AppointmentCancelledPayload;

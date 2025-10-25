@@ -1,6 +1,8 @@
 import { Column, CreateDateColumn, Entity, Index, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { ApiProperty } from '@nestjs/swagger';
 
+
+
 export type NotificationChannel = 'email' | 'sms' | 'push';
 export type NotificationStatus = 'queued' | 'processing' | 'sent' | 'failed';
 
