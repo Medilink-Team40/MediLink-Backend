@@ -1,24 +1,32 @@
+import axios, { AxiosError } from 'axios';
+import { HttpException, HttpStatus } from '@nestjs/common';
+
 export function CatchError(errorHandler?: (error: any) => any) {
   return function (target: any, propertyKey: string, descriptor: PropertyDescriptor) {
     const originalMethod = descriptor.value;
-    descriptor.value = function (...args: any[]) {
+
+    descriptor.value = async function (...args: any[]) {
       try {
-        const result = originalMethod.apply(this, args);
-
-        if (result && typeof result.catch === 'function') {
-          return result.catch((error: any) => {
-            if (errorHandler) {
-              return errorHandler(error);
-            }
-            console.error(`Error asíncrono en ${propertyKey}:`, error);
-            throw error;
-          });
-        }
-
+        const result = await originalMethod.apply(this, args);
         return result;
       } catch (error) {
-        console.error(`Error síncrono en ${propertyKey}:`, error);
-        return 'Error inesperado';
+        // Si es AxiosError
+        if (axios.isAxiosError(error)) {
+          const err = error as AxiosError<any>;
+          const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
+          const message = err.response?.data?.message || err.message || 'Error en Axios';
+          console.error(`❌ Axios error (${status}):`, message);
+
+          throw new HttpException(message, status);
+        }
+
+        // Si es otro error
+        console.error('❌ Error inesperado:', error);
+        if (errorHandler) {
+          throw errorHandler(error);
+        }
+
+        throw new HttpException('Error inesperado', HttpStatus.INTERNAL_SERVER_ERROR);
       }
     };
 
