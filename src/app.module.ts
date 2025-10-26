@@ -15,6 +15,7 @@ import { CalendarModule } from './calendar/calendar.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { ChatModule } from './chat/chat.module';
+import { ZoomModule } from './zoom/zoom.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { ChatModule } from './chat/chat.module';
     AvailabilityModule,
     AppointmentModule,
     ChatModule,
+    ZoomModule
   ],
   controllers: [],
   providers: [AppService],

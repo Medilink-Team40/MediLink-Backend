@@ -8,6 +8,7 @@ import { CalendarEntity } from '../calendar/entity/calendar.entity';
 import { NotificationService } from '../notifications/notification.service';
 import { NotificationChannel, NotificationEventType } from '../notifications/notification.types';
 import { Practitioner } from '../practitioner/entities';
+import { ZoomService } from '../zoom/zoom.service';
 
 @Injectable()
 export class AppointmentService {
@@ -24,6 +25,7 @@ export class AppointmentService {
     private readonly calendarRepo: Repository<CalendarEntity>,
 
     private readonly notificationService: NotificationService,
+    private readonly zoomService: ZoomService,
   ) {}
 
   async create(dto: CreateAppointmentDto) {
@@ -45,11 +47,42 @@ export class AppointmentService {
       calendar = await this.calendarRepo.save(calendar);
     }
 
+    // Si es una cita virtual y no tiene joinUrl, crear una reunión en Zoom
+    let joinUrl = dto.joinUrl;
+    if (dto.type === 'virtual' && !joinUrl) {
+      try {
+        const startDate = new Date(dto.startAt);
+        const zoomMeeting = await this.zoomService.createMeeting(
+          doctor.keycloakId,
+          {
+            topic: `Cita Médica - ${patient.name?.[0]?.given || 'Paciente'}`,
+            type: 2, // Scheduled meeting
+            start_time: this.zoomService.formatDateForZoom(startDate),
+            duration: dto.durationMinutes,
+            timezone: 'UTC',
+            agenda: dto.notes || 'Consulta médica',
+            settings: {
+              host_video: true,
+              participant_video: true,
+              join_before_host: true,
+              waiting_room: false,
+            },
+          },
+        );
+        joinUrl = zoomMeeting.join_url;
+        this.logger.log(`✅ Reunión Zoom creada: ${zoomMeeting.id}`);
+      } catch (error) {
+        this.logger.error(`❌ Error creando reunión Zoom: ${error.message}`);
+        // Continuar sin Zoom si hay error
+      }
+    }
+
     const appointment = this.appointmentRepo.create({
       ...dto,
       doctor,
       patient,
       calendar,
+      joinUrl,
       patientNameSnapshot: `${Array.isArray(patient.name[0].given) ? patient.name[0].given.join(' ') : patient.name[0].given} ${patient.name[0].family ?? ''}`,
       startAt: new Date(dto.startAt),
       endAt: new Date(dto.endAt),

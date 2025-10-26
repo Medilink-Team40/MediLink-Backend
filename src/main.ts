@@ -1,16 +1,17 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { Logger, ValidationPipe } from '@nestjs/common';
 // import { Exceptions } from './filters/exceptions/exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['*'],
+    origin: ['http://localhost:5173'], // Permitir solo el origen del frontend
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Importante para enviar cookies y encabezados de autorización
   });
 
   // 📘 Swagger config
@@ -28,12 +29,12 @@ async function bootstrap() {
   // app.useGlobalFilters(new Exceptions());
   app.useGlobalPipes(new ValidationPipe());
 
-  const port = process.env.PORT || 3000;
+  const port = process.env.PORT || 3003; // Asegurarse de que el puerto sea 3003
   await app.listen(port, '0.0.0.0');
 
-  console.log(`🚀 Servidor corriendo en el puerto ${port}`);
+  Logger.log(`🚀 Servidor corriendo en el puerto ${port}`);
 }
 bootstrap().catch((err) => {
-  console.error('Error al iniciar la aplicación:', err);
+  Logger.error('Error al iniciar la aplicación:', err);
   process.exit(1);
 });

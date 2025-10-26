@@ -1,6 +1,7 @@
 {
-  "name": "MediLink",
+  "name": "medilink",
   "version": "0.0.1",
+  "type": "commonjs",
   "description": "",
   "author": "",
   "private": true,
@@ -8,10 +9,10 @@
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "node --max-old-space-size=400 dist/main.js",
+    "start": "node -r tsconfig-paths/register --max-old-space-size=400 dist/main.js",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node --max-old-space-size=400 dist/main.js",
+    "start:prod": "node -r tsconfig-paths/register --max-old-space-size=400 dist/main.js",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "schema:drop": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:drop -d src/config/data-source.ts",
     "schema:sync": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js schema:sync -d src/config/data-source.ts",
