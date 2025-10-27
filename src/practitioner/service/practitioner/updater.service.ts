@@ -1,17 +1,18 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { PractitionerTelecomDto } from 'src/practitioner/dto/Telecom.dto';
-import { UpdateIdentifierDto } from 'src/practitioner/dto/update';
-import { UpdateBasicDataDto } from 'src/practitioner/dto/update/UpdateBasicData.dto';
-import { PractitionerQualificationDto } from 'src/practitioner/dto/update/UpdateQualifications.dto';
+import { PractitionerTelecomDto } from '../../../practitioner/dto/Telecom.dto';
+import { UpdateIdentifierDto } from '../../../practitioner/dto/update';
+import { UpdateBasicDataDto } from '../../../practitioner/dto/update/UpdateBasicData.dto';
+import { PractitionerQualificationDto } from '../../../practitioner/dto/update/UpdateQualifications.dto';
 import {
   Practitioner,
   PractitionerIdentifier,
   PractitionerQualification,
   PractitionerTelecom,
-} from 'src/practitioner/entities';
-import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from 'src/practitioner/errors.codes';
-import { PractitionerUpdaterData, PractitionerUpdaterEntities } from 'src/practitioner/practitioner.types';
-import { DeepPartial, ObjectLiteral, QueryFailedError, Repository, TypeORMError } from 'typeorm';
+} from '../../../practitioner/entities';
+//'src/practitioner/entities';
+import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../errors.codes';
+//import { PractitionerUpdaterData, PractitionerUpdaterEntities } from '../../../practitioner/practitioner.types';
+import { DeepPartial, FindOptionsWhere, ObjectLiteral, QueryFailedError, Repository } from 'typeorm';
 
 export class PractitionerUpdater {
   constructor(
@@ -20,11 +21,16 @@ export class PractitionerUpdater {
     private readonly profileRepository: Repository<Practitioner>,
     private readonly qualificationsRepository: Repository<PractitionerQualification>,
     private readonly identifiersRepository: Repository<PractitionerIdentifier>,
-  ) {}
+  ) { }
 
   public async upsert<T extends ObjectLiteral>(repository: Repository<T>, data: Partial<T>[], filterColumn: keyof T) {
-    const existingRecords = await repository.findBy({ practitionerId: this.user } as any);
-    const incomingValues = data.map((value) => value[filterColumn]).filter((value) => !!value);
+    const existingRecords = await repository.findBy({ practitionerId: this.user } as unknown as FindOptionsWhere<T>);
+    const incomingValues = data
+      .map((item: Partial<T>): T[keyof T] | undefined => {
+        const columnValue: T[keyof T] | undefined = item[filterColumn];
+        return columnValue;
+      })
+      .filter((value): value is T[keyof T] => !!value);
 
     const recordsToDelete = existingRecords.filter(
       (record) => record[filterColumn] && !incomingValues.includes(record[filterColumn]),
@@ -66,20 +72,22 @@ export class PractitionerUpdater {
         practitionerId: this.user,
       }));
       await this.upsert<PractitionerQualification>(this.qualificationsRepository, entities, 'code');
-    } catch (error) {
+    } catch (error: unknown) {
       if (!(error instanceof QueryFailedError)) {
         throw error;
       }
 
-      const code = error.driverError.code;
-      const customCode = `ERROR_${code}`;
-      const customError = PRACTITIONER_ERROR_CODES[customCode];
+      const driverErrorWithCode = error.driverError as { code: string };
+      const code: string = driverErrorWithCode.code;
+      // Check if the code exists as a value in PRACTITIONER_ERROR_CODES
+      const isKnownErrorCode = Object.values(PRACTITIONER_ERROR_CODES).includes(code as PRACTITIONER_ERROR_CODES);
 
-      if (!customError) {
+      if (!isKnownErrorCode) {
         throw error;
       }
 
-      throw new HttpException(PRACTITIONER_ERROR[code], 400);
+      // If it's a known error code, then PRACTITIONER_ERROR[code] will be valid.
+      throw new HttpException(PRACTITIONER_ERROR[code as PRACTITIONER_ERROR_CODES], 400);
     }
   }
 
@@ -88,7 +96,7 @@ export class PractitionerUpdater {
       ...dto,
       practitionerId: this.user,
     }));
-    
+
     await this.upsert<PractitionerIdentifier>(this.identifiersRepository, entities, 'value');
   }
 
