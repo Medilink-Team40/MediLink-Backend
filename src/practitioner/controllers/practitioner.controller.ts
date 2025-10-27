@@ -19,7 +19,7 @@ export class PractitionerController {
     private readonly service: PractitionerService,
   ) {}
 
-  //@Roles(RolesTypes.ADMIN)
+  @Roles(RolesTypes.ADMIN)
   @Post('register-practitioner')
   @CatchError()
   public async create(@Body() practitioner: PractitionerRegisterDto) {
