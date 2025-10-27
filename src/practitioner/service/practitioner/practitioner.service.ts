@@ -7,9 +7,9 @@ import {
   UpdateProfileDto,
   UpdateBasicDataDto,
   PractitionerRegisterDto,
-  PractitionerTelecomDto,
+  CreateTelecomDto,
 } from '../../../practitioner/dto/';
-import { Practitioner, PractitionerIdentifier } from '../../../practitioner/entities';
+import { Practitioner, PractitionerIdentifier, PractitionerQualification } from '../../../practitioner/entities';
 import { AvailableUpdates, UpdateProfile } from '../../../practitioner/practitioner.types';
 import { PractitionerUpdaterFactory } from '../../../practitioner/factory/updater.factory';
 
@@ -18,6 +18,7 @@ export class PractitionerService {
   constructor(
     @InjectRepository(Practitioner)
     private readonly repository: Repository<Practitioner>,
+    @InjectRepository(PractitionerQualification)
     private readonly updaterFactory: PractitionerUpdaterFactory,
   ) {}
 
@@ -41,7 +42,7 @@ export class PractitionerService {
     const updater = this.updaterFactory.create(practitioner.userId);
     const modulesToUpdate = Object.keys(updatedData);
     const updates: AvailableUpdates = {
-      ['telecom']: (data: PractitionerTelecomDto[]) => updater.telecom(data, email),
+      ['telecom']: (data: CreateTelecomDto[]) => updater.telecom(data, email),
       ['qualifications']: (data: PractitionerQualificationDto[]) => updater.qualifications(data),
       ['identifiers']: (data: PractitionerIdentifier[]) => updater.identifiers(data),
       ['profile']: (data: UpdateBasicDataDto) => updater.profile(data),

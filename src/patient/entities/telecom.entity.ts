@@ -1,9 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Unique } from 'typeorm';
-import { Practitioner } from './practitioner.entity';
+import { Patient } from './patient.entity';
 import { FHIRTelecomSystem, TelecomUses } from '../../types/fhir.types';
 
-@Entity('practitioner_telecom')
-export class PractitionerTelecom {
+@Entity('patient_telecom')
+export class PatientTelecom {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -27,12 +27,12 @@ export class PractitionerTelecom {
   @Column({ type: 'integer', nullable: false })
   rank: number;
 
-  @ManyToOne(() => Practitioner, (practitioner) => practitioner.telecom, {
+  @ManyToOne(() => Patient, (patient) => patient.telecom, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'practitioner_id' })
-  practitioner: Practitioner;
+  @JoinColumn({ name: 'patient_id' })
+  patient: Patient;
 
-  @Column({ type: 'uuid', name: 'practitioner_id' })
-  practitionerId: string;
+  @Column({ type: 'uuid', name: 'patient_id' })
+  patientId: string;
 }

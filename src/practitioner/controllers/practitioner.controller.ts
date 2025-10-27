@@ -9,9 +9,9 @@ import { Roles } from '../../auth/roles/roles.decorator';
 import { UpdateProfileDto } from '../dto/update/UpdateProfile.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../auth/roles/roles.guard';
-import { AccountOwnerGuard } from '../guards/account-owner/account-owner.guard';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse, PractitionerIdentifierType } from '../practitioner.types';
+import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse } from '../../types/fhir.types';
+import {  PractitionerIdentifierType } from '../practitioner.types';
 import { UserData } from '../../auth/auth.types';
 
 @ApiTags('Practitioner')

@@ -1,8 +1,8 @@
 import { IsEnum, IsNotEmpty, IsNumber, IsOptional, IsString, IsUUID } from 'class-validator';
-import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
 import { ApiProperty } from '@nestjs/swagger';
+import { FHIRTelecomSystem, TelecomUses } from '../../types/fhir.types';
 
-export class PractitionerTelecomDto {
+export class CreateTelecomDto {
   @ApiProperty({ example: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', description: 'ID del registro de telecomunicación (opcional para creación)', required: false })
   @IsOptional()
   @IsUUID()

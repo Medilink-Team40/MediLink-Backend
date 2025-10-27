@@ -1,8 +1,8 @@
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, ValidateNested } from 'class-validator';
-import { NameStructDto } from '../NameStruct.dto';
-import { FHIRExternalGender } from '../../practitioner.types';
+import { NameStructDto } from '../../../dto/fhir/NameStruct.dto';
 import { ApiProperty } from '@nestjs/swagger';
+import { FHIRExternalGender } from '../../../types/fhir.types';
 
 export class UpdateBasicDataDto {
   @ApiProperty({ type: [NameStructDto], description: 'Nombres del profesional', required: false })

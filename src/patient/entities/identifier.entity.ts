@@ -1,10 +1,9 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
-import { Practitioner } from './practitioner.entity';
-import { PractitionerIdentifierType } from '../practitioner.types';
 import { FHIRIdentifierUse, SYSTEM_INTERN } from '../../types/fhir.types';
+import { Patient } from './patient.entity';
 
-@Entity('practitioner_identifier')
-export class PractitionerIdentifier {
+@Entity('patient_identifier')
+export class PatientIdentifier {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
@@ -15,21 +14,18 @@ export class PractitionerIdentifier {
   })
   use: FHIRIdentifierUse;
 
-  @Column({ type: 'varchar', length: 50, nullable: true })
-  code: PractitionerIdentifierType;
-
   @Column({ type: 'text', nullable: false, default: SYSTEM_INTERN })
   system: string;
 
   @Column({ type: 'varchar', nullable: false })
   value: string;
 
-  @ManyToOne(() => Practitioner, (practitioner) => practitioner.identifier, {
+  @ManyToOne(() => Patient, (patient) => patient.identifier, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'practitioner_id' })
-  practitioner: Practitioner;
+  @JoinColumn({ name: 'patient_id' })
+  patient: Patient;
 
-  @Column({ type: 'uuid', name: 'practitioner_id' })
-  practitionerId: string;
+  @Column({ type: 'uuid', name: 'patient_id' })
+  patientId: string;
 }

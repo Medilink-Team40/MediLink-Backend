@@ -1,13 +1,14 @@
 import { Entity, Column, OneToMany, Unique, PrimaryColumn, OneToOne } from 'typeorm';
-import { PractitionerQualification, PractitionerTelecom, PractitionerIdentifier } from './';
 import { RolesTypes } from '../../auth/auth.types';
 import { CalendarEntity } from '../../calendar/entity/calendar.entity';
 import { AppointmentEntity } from '../../appointment/entity/appointment.entity';
 import { FHIRExternalGender, NameStruct } from '../../types/fhir.types';
+import { PatientTelecom } from './telecom.entity';
+import { PatientIdentifier } from './identifier.entity';
 
-@Entity('practitioner')
+@Entity('patient')
 @Unique(['email'])
-export class Practitioner {
+export class Patient {
   @PrimaryColumn({ type: 'uuid', name: 'keycloak_id', nullable: false })
   keycloakId: string;
 
@@ -27,7 +28,7 @@ export class Practitioner {
   @Column({
     type: 'enum',
     enum: RolesTypes,
-    default: RolesTypes.PRACTITIONER,
+    default: RolesTypes.PATIENT,
   })
   role: RolesTypes;
 
@@ -40,13 +41,15 @@ export class Practitioner {
   @Column({ type: 'timestamptz', default: () => 'CURRENT_TIMESTAMP' })
   createdAt: Date;
 
-  @OneToMany(() => PractitionerIdentifier, (identifier) => identifier.practitioner, { cascade: true })
-  identifier: PractitionerIdentifier[];
+  @OneToMany(() => PatientIdentifier, (identifier) => identifier.patient, { cascade: true })
+  identifier: PatientIdentifier[];
 
-  @OneToMany(() => PractitionerTelecom, (telecom) => telecom.practitioner, {
+  @OneToMany(() => PatientTelecom, (telecom) => telecom.patient, {
     cascade: true,
   })
-  telecom: PractitionerTelecom[];
+  telecom: PatientTelecom[];
+
+  /*
 
   @OneToOne(() => CalendarEntity, (cal) => cal.practitioner, {
     cascade: true,
@@ -54,12 +57,11 @@ export class Practitioner {
   })
   calendar?: CalendarEntity;
 
+*/
+
   @OneToMany(() => AppointmentEntity, (appt) => appt.doctor)
   appointmentsAsDoctor?: AppointmentEntity[];
 
   @OneToMany(() => AppointmentEntity, (appt) => appt.patient)
   appointmentsAsPatient?: AppointmentEntity[];
-
-  @OneToMany(() => PractitionerQualification, (qualification) => qualification.practitioner, { cascade: true })
-  qualification: PractitionerQualification[];
 }
