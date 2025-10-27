@@ -1,4 +1,4 @@
-import { Body, Controller, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { RolesTypes } from '../../auth/auth.types';
 import { KeyCloakService } from '../../keycloak/services/create/create.service';
 import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
@@ -33,10 +33,18 @@ export class PractitionerController {
   }
 
   @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
+  @Get('me')
+  @CatchError()
+  public async getCurrentPractitioner(@Request() req) {
+    const keycloakId = req.user.id as string;
+    const practitioner = await this.service.findOne(keycloakId);
+    return practitioner;
+  }
+
+  @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Patch('update-profile')
   @CatchError()
   public async update(@Request() req, @Body() practitioner: UpdateProfileDto) {
-    console.log("🚀 ~ PractitionerController ~ update ~ req.user:", req.user)
     const id = req.user.id as string;
     const email = req.user.email as string;
 

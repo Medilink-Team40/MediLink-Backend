@@ -61,4 +61,11 @@ export class PractitionerService {
 
     if (promises.length > 0) await Promise.all(promises);
   }
+
+  public async findOne(keycloakId: string): Promise<Practitioner | null> {
+    return await this.repository.findOne({
+      where: { keycloakId },
+      relations: ['telecom', 'qualification', 'identifier', 'calendar'],
+    });
+  }
 }
