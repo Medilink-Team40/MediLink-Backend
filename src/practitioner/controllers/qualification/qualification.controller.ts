@@ -1,6 +1,6 @@
 import { Controller, Get, Request } from '@nestjs/common';
-import { CatchError } from 'src/decorators/errors.decorator';
-import { QualificationService } from 'src/practitioner/service/qualification/qualification.service';
+import { CatchError } from '../../../decorators/errors.decorator';
+import { QualificationService } from '../../service/qualification/qualification.service';
 
 @Controller('qualification')
 export class QualificationController {

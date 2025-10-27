@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { QualificationCode } from 'src/practitioner/entities/qualification-codes.entity';
 import { Repository } from 'typeorm';
+import { QualificationCode } from '../../entities/qualification-codes.entity';
 
 @Injectable()
 export class QualificationService {
