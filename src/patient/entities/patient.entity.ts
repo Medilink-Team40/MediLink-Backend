@@ -44,7 +44,7 @@ export class Patient {
   @OneToMany(() => PatientIdentifier, (identifier) => identifier.patient, { cascade: true })
   identifier: PatientIdentifier[];
 
-  @OneToMany(() => PatientTelecom, (telecom) => telecom.practitioner, {
+  @OneToMany(() => PatientTelecom, (telecom) => telecom.patient, {
     cascade: true,
   })
   telecom: PatientTelecom[];
