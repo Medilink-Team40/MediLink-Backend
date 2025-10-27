@@ -1,5 +1,4 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { PractitionerTelecomDto } from '../../../practitioner/dto/Telecom.dto';
 import { UpdateIdentifierDto } from '../../../practitioner/dto/update';
 import { UpdateBasicDataDto } from '../../../practitioner/dto/update/UpdateBasicData.dto';
 import { PractitionerQualificationDto } from '../../../practitioner/dto/update/UpdateQualifications.dto';
@@ -13,6 +12,7 @@ import {
 import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../errors.codes';
 //import { PractitionerUpdaterData, PractitionerUpdaterEntities } from '../../../practitioner/practitioner.types';
 import { DeepPartial, FindOptionsWhere, ObjectLiteral, QueryFailedError, Repository } from 'typeorm';
+import { CreateTelecomDto } from '../../dto';
 
 export class PractitionerUpdater {
   constructor(
@@ -21,7 +21,7 @@ export class PractitionerUpdater {
     private readonly profileRepository: Repository<Practitioner>,
     private readonly qualificationsRepository: Repository<PractitionerQualification>,
     private readonly identifiersRepository: Repository<PractitionerIdentifier>,
-  ) { }
+  ) {}
 
   public async upsert<T extends ObjectLiteral>(repository: Repository<T>, data: Partial<T>[], filterColumn: keyof T) {
     const existingRecords = await repository.findBy({ practitionerId: this.user } as unknown as FindOptionsWhere<T>);
@@ -56,7 +56,7 @@ export class PractitionerUpdater {
     }
   }
 
-  public async telecom(telecomData: PractitionerTelecomDto[], email: string) {
+  public async telecom(telecomData: CreateTelecomDto[], email: string) {
     const incomingValues = telecomData.map(({ value }) => value).filter((value) => !!value);
     if (incomingValues.includes(email)) {
       throw new HttpException(PRACTITIONER_ERROR[PRACTITIONER_ERROR_CODES.ERROR_001], HttpStatus.BAD_REQUEST);

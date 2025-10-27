@@ -1,9 +1,9 @@
 import { Repository } from 'typeorm';
-import { PractitionerTelecomDto } from './dto/Telecom.dto';
 import { UpdateBasicDataDto } from './dto/update/UpdateBasicData.dto';
 import { PractitionerQualificationDto } from './dto/update/UpdateQualifications.dto';
 import { UpdateIdentifierDto } from './dto/update/UpdateIdentifier.dto';
 import { Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom } from './entities';
+import { CreateTelecomDto } from './dto';
 export enum PractitionerIdentifierType {
   NI = 'NI',   // Número de matrícula profesional
   PRO = 'PRO', // Profesional
@@ -18,7 +18,7 @@ export interface QualificationCodes {
 
 export interface UpdateProfile {
   profile?: UpdateBasicDataDto;
-  telecom?: PractitionerTelecomDto[];
+  telecom?: CreateTelecomDto[];
   qualifications?: PractitionerQualificationDto[];
   identifiers?: UpdateIdentifierDto[];
 }

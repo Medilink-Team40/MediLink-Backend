@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Unique } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
-import { FHIRTelecomSystem, TelecomUses } from '../practitioner.types';
+import { FHIRTelecomSystem, TelecomUses } from '../../types/fhir.types';
 
 @Entity('practitioner_telecom')
 export class PractitionerTelecom {

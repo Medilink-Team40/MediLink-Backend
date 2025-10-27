@@ -7,7 +7,7 @@ import {
   UpdateProfileDto,
   UpdateBasicDataDto,
   PractitionerRegisterDto,
-  PractitionerTelecomDto,
+  CreateTelecomDto,
 } from '../../../practitioner/dto/';
 import { Practitioner, PractitionerIdentifier, PractitionerQualification } from '../../../practitioner/entities';
 import { AvailableUpdates, UpdateProfile } from '../../../practitioner/practitioner.types';
@@ -42,7 +42,7 @@ export class PractitionerService {
     const updater = this.updaterFactory.create(practitioner.userId);
     const modulesToUpdate = Object.keys(updatedData);
     const updates: AvailableUpdates = {
-      ['telecom']: (data: PractitionerTelecomDto[]) => updater.telecom(data, email),
+      ['telecom']: (data: CreateTelecomDto[]) => updater.telecom(data, email),
       ['qualifications']: (data: PractitionerQualificationDto[]) => updater.qualifications(data),
       ['identifiers']: (data: PractitionerIdentifier[]) => updater.identifiers(data),
       ['profile']: (data: UpdateBasicDataDto) => updater.profile(data),
@@ -69,5 +69,4 @@ export class PractitionerService {
       relations: ['telecom', 'qualification', 'identifier', 'calendar'],
     });
   }
-
 }

@@ -1,6 +1,6 @@
 import { ArrayMinSize, IsArray, IsNotEmpty, IsString } from 'class-validator';
-import { NameStruct } from '../practitioner.types';
 import { ApiProperty } from '@nestjs/swagger';
+import { NameStruct } from '../../types/fhir.types';
 
 export class NameStructDto implements NameStruct {
   @ApiProperty({ example: 'official', description: 'Uso del nombre (e.g., official, usual)' })

@@ -1,10 +1,9 @@
 import { Entity, Column, OneToMany, Unique, PrimaryColumn, OneToOne } from 'typeorm';
 import { PractitionerQualification, PractitionerTelecom, PractitionerIdentifier } from './';
-import { FHIRExternalGender } from '../practitioner.types';
-import type { NameStruct } from '../practitioner.types';
 import { RolesTypes } from '../../auth/auth.types';
 import { CalendarEntity } from '../../calendar/entity/calendar.entity';
 import { AppointmentEntity } from '../../appointment/entity/appointment.entity';
+import { FHIRExternalGender, NameStruct } from '../../types/fhir.types';
 
 @Entity('practitioner')
 @Unique(['email'])

@@ -5,11 +5,11 @@ import {
   ValidatorConstraintInterface,
   ValidationArguments,
 } from 'class-validator';
-import { PractitionerTelecomDto } from '../../../practitioner/dto/Telecom.dto';
+import { CreateTelecomDto } from '../../practitioner/dto';
 
 @ValidatorConstraint({ async: false })
 export class NoDuplicateEmailInTelecomConstraint implements ValidatorConstraintInterface {
-  validate(telecoms: PractitionerTelecomDto[], args: ValidationArguments) {
+  validate(telecoms: CreateTelecomDto[], args: ValidationArguments) {
     if (!Array.isArray(telecoms)) {
       return false;
     }

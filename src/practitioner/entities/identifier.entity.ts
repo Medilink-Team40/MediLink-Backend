@@ -1,6 +1,7 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
-import { FHIRIdentifierUse, PractitionerIdentifierType, SYSTEM_INTERN } from '../practitioner.types';
+import { PractitionerIdentifierType } from '../practitioner.types';
+import { FHIRIdentifierUse, SYSTEM_INTERN } from '../../types/fhir.types';
 
 @Entity('practitioner_identifier')
 export class PractitionerIdentifier {
