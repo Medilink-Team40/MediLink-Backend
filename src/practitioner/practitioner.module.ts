@@ -7,6 +7,7 @@ import { Practitioner, PractitionerIdentifier, PractitionerQualification, Practi
 import { KeyCloakService } from '../keycloak/services/create/create.service';
 import { HttpModule } from '@nestjs/axios';
 import { PassportModule } from '@nestjs/passport';
+import { PractitionerUpdaterFactory } from './factory/updater.factory';
 
 @Module({
   imports: [
@@ -16,7 +17,7 @@ import { PassportModule } from '@nestjs/passport';
     TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom]),
   ],
   controllers: [PractitionerController],
-  providers: [KeyCloakService, PractitionerService],
+  providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory],
   exports: [PractitionerService],
 })
 export class PractitionerModule {}

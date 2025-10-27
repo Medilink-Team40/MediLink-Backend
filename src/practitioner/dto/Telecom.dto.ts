@@ -8,15 +8,17 @@ export class PractitionerTelecomDto {
 
   @IsNotEmpty()
   @IsEnum(FHIRTelecomSystem)
-  system: string;
+  system: FHIRTelecomSystem;
 
   @IsNotEmpty()
   @IsString()
   value: string;
 
+  @IsNotEmpty()
   @IsEnum(TelecomUses)
-  use: string;
+  use: TelecomUses;
 
+  @IsNotEmpty()
   @IsNumber()
   rank: number;
 }

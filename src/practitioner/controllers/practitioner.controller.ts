@@ -12,13 +12,13 @@ import { RolesGuard } from '../../auth/roles/roles.guard';
 import { AccountOwnerGuard } from '../guards/account-owner/account-owner.guard';
 
 @Controller('practitioner')
+@UseGuards(AuthGuard('jwt'), RolesGuard)
 export class PractitionerController {
   constructor(
     private readonly keycloak: KeyCloakService,
     private readonly service: PractitionerService,
   ) {}
 
-  //@UseGuards(AuthGuard(), RolesGuard)
   //@Roles(RolesTypes.ADMIN)
   @Post('register-practitioner')
   @CatchError()
@@ -32,11 +32,11 @@ export class PractitionerController {
     return user;
   }
 
-  @UseGuards(AuthGuard('jwt'), RolesGuard)
   @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Patch('update-profile')
   @CatchError()
   public async update(@Request() req, @Body() practitioner: UpdateProfileDto) {
+    console.log("🚀 ~ PractitionerController ~ update ~ req.user:", req.user)
     const id = req.user.id as string;
     const email = req.user.email as string;
 

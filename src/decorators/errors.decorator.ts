@@ -10,7 +10,6 @@ export function CatchError(errorHandler?: (error: any) => any) {
         const result = await originalMethod.apply(this, args);
         return result;
       } catch (error) {
-        // Si es AxiosError
         if (axios.isAxiosError(error)) {
           const err = error as AxiosError<any>;
           const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
@@ -20,7 +19,10 @@ export function CatchError(errorHandler?: (error: any) => any) {
           throw new HttpException(message, status);
         }
 
-        // Si es otro error
+        if(error instanceof HttpException){
+          throw error
+        }
+
         console.error('❌ Error inesperado:', error);
         if (errorHandler) {
           throw errorHandler(error);

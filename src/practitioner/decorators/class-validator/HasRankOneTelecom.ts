@@ -10,6 +10,12 @@ import { PractitionerTelecomDto } from '../../dto/Telecom.dto';
 @ValidatorConstraint({ async: false })
 export class HasRankOneConstraint implements ValidatorConstraintInterface {
   validate(telecoms: PractitionerTelecomDto[], args: ValidationArguments) {
+    console.log("🚀 ~ HasRankOneConstraint ~ validate ~ telecoms:", telecoms)
+
+    if (!telecoms) {
+      return true;
+    }
+
     if (!Array.isArray(telecoms)) {
       return false;
     }

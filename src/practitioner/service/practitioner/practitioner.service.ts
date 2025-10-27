@@ -1,30 +1,24 @@
-import { HttpCode, HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { RolesTypes } from '../../../auth/auth.types';
-// import { PractitionerRegisterDto } from '../../../dto/PractitionerRegisterDto';
-// import { PractitionerTelecomDto } from '../../../dto/Telecom.dto';
-// import { UpdateBasicDataDto } from '../../../dto/update/UpdateBasicData.dto';
-// import { UpdateProfileDto } from '../../../dto/update/UpdateProfile.dto';
-// import { PractitionerQualificationDto } from '../../../dto/update/UpdateQualifications.dto';
-// import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from '../../../entities';
-// import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../../errors.codes';
 import { Repository } from 'typeorm';
-import { PractitionerRegisterDto } from '../../../practitioner/dto/PractitionerRegisterDto';
-import { PractitionerTelecomDto } from '../../../practitioner/dto/Telecom.dto';
-import { UpdateBasicDataDto } from '../../../practitioner/dto/update/UpdateBasicData.dto';
-import { UpdateProfileDto } from '../../../practitioner/dto/update/UpdateProfile.dto';
-import { PractitionerQualificationDto } from '../../../practitioner/dto/update/UpdateQualifications.dto';
-import { Practitioner, PractitionerTelecom, PractitionerIdentifier } from '../../../practitioner/entities';
-import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../../practitioner/errors.codes';
+import {
+  PractitionerQualificationDto,
+  UpdateProfileDto,
+  UpdateBasicDataDto,
+  PractitionerRegisterDto,
+  PractitionerTelecomDto,
+} from '../../../practitioner/dto/';
+import { Practitioner, PractitionerIdentifier } from '../../../practitioner/entities';
 import { AvailableUpdates, UpdateProfile } from '../../../practitioner/practitioner.types';
+import { PractitionerUpdaterFactory } from '../../../practitioner/factory/updater.factory';
 
 @Injectable()
 export class PractitionerService {
   constructor(
     @InjectRepository(Practitioner)
     private readonly repository: Repository<Practitioner>,
-    @InjectRepository(PractitionerTelecom)
-    private readonly telecomRepository: Repository<PractitionerTelecom>,
+    private readonly updaterFactory: PractitionerUpdaterFactory,
   ) {}
 
   public async create(dto: PractitionerRegisterDto, id: string) {
@@ -40,58 +34,17 @@ export class PractitionerService {
     return await this.repository.save(newPractitioner);
   }
 
-  public async getByKeyCloakId(id: string) {
-    return await this.repository.findOneBy({ keycloakId: id });
-  }
-
-  public async updateTelecom(practitionerId: string, telecomData: PractitionerTelecomDto[], email: string) {
-    const existingRecords = await this.telecomRepository.findBy({ practitionerId });
-    const incomingValues = telecomData.map(({ value }) => value).filter((value) => !!value);
-
-    if (incomingValues.includes(email)) {
-      throw new HttpException(PRACTITIONER_ERROR[PRACTITIONER_ERROR_CODES['001']], HttpStatus.BAD_REQUEST);
-    }
-
-    const recordsToDelete = existingRecords.filter(
-      (existing) => existing.value && !incomingValues.includes(existing.value),
-    );
-
-    if (recordsToDelete.length > 0) {
-      await this.telecomRepository.remove(recordsToDelete);
-    }
-
-    const recordsToSaveOrUpdate = telecomData.map((dto) => {
-      const baseRecord = { ...dto, practitionerId };
-
-      if (dto.value) {
-        const existingMatch = existingRecords.find((e) => e.value === dto.value);
-        if (existingMatch) {
-          return this.telecomRepository.merge(existingMatch, baseRecord as PractitionerTelecom);
-        }
-      }
-
-      return baseRecord;
-    });
-
-    await this.telecomRepository.save(recordsToSaveOrUpdate as PractitionerTelecom[]);
-
-    console.log('🚀 ~ Registros guardados/actualizados exitosamente.');
-  }
-
-  public async updateQualifications(userId: string, data: PractitionerIdentifier[]) {}
-  public async updateIdentifiers(userId: string, data: PractitionerQualificationDto[]) {}
-  public async updateProfile(userId: string, data: UpdateBasicDataDto) {}
-
   public async update(practitioner: UpdateProfileDto & { userId: string; email: string }) {
     let promises: void[] = [];
 
     const { userId, email, ...updatedData } = practitioner;
+    const updater = this.updaterFactory.create(practitioner.userId);
     const modulesToUpdate = Object.keys(updatedData);
     const updates: AvailableUpdates = {
-      ['telecom']: (data: PractitionerTelecomDto[]) => this.updateTelecom(userId, data, email),
-      ['qualifications']: (data: PractitionerIdentifier[]) => this.updateQualifications(userId, data),
-      ['identifiers']: (data: PractitionerQualificationDto[]) => this.updateIdentifiers(userId, data),
-      ['profile']: (data: UpdateBasicDataDto) => this.updateProfile(userId, data),
+      ['telecom']: (data: PractitionerTelecomDto[]) => updater.telecom(data, email),
+      ['qualifications']: (data: PractitionerQualificationDto[]) => updater.qualifications(data),
+      ['identifiers']: (data: PractitionerIdentifier[]) => updater.identifiers(data),
+      ['profile']: (data: UpdateBasicDataDto) => updater.profile(data),
     };
 
     const data: Record<keyof UpdateProfile, UpdateProfile[keyof UpdateProfile]> = {

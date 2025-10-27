@@ -1,6 +1,6 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
-import { FHIRIdentifierUse } from '../practitioner.types';
+import { FHIRIdentifierUse, PractitionerIdentifierType, SYSTEM_INTERN } from '../practitioner.types';
 
 @Entity('practitioner_identifier')
 export class PractitionerIdentifier {
@@ -15,15 +15,14 @@ export class PractitionerIdentifier {
   use: FHIRIdentifierUse;
 
   @Column({ type: 'varchar', length: 50, nullable: true })
-  code: string; // Ej: 'NI', 'PRO', 'ESP'
+  code: PractitionerIdentifierType;
 
-  @Column({ type: 'text', nullable: false })
-  system: string; // URL del sistema, ej: http://sisa.msal.gov.ar/REFEPS
+  @Column({ type: 'text', nullable: false, default: SYSTEM_INTERN })
+  system: string;
 
   @Column({ type: 'varchar', nullable: false })
-  value: string; // El valor del identificador (ej: '12497922')
+  value: string;
 
-  // --- Relación ---
   @ManyToOne(() => Practitioner, (practitioner) => practitioner.identifier, {
     onDelete: 'CASCADE',
   })
