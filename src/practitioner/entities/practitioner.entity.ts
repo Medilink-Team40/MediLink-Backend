@@ -1,4 +1,4 @@
-import { Entity, Column, OneToMany, Unique, PrimaryColumn, OneToOne } from 'typeorm';
+import { Entity, Column, OneToMany, Unique, PrimaryColumn, OneToOne, JoinColumn } from 'typeorm';
 import { PractitionerQualification, PractitionerTelecom, PractitionerIdentifier } from './';
 import { FHIRExternalGender } from '../practitioner.types';
 import type { NameStruct } from '../practitioner.types';
@@ -53,7 +53,8 @@ export class Practitioner {
     cascade: true,
     onDelete: 'CASCADE',
   })
-  calendar?: CalendarEntity;
+  @JoinColumn({ name: 'calendar_id' })
+  calendar: CalendarEntity;
 
   @OneToMany(() => AppointmentEntity, (appt) => appt.doctor)
   appointmentsAsDoctor?: AppointmentEntity[];

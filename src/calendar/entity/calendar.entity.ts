@@ -17,10 +17,10 @@ export class CalendarEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @OneToOne(() => Practitioner, (d) => d.calendar, {
+  @OneToOne(() => Practitioner, (practitioner) => practitioner.calendar, {
     onDelete: 'CASCADE',
   })
-  @JoinColumn({ name: 'id_practitioner' })
+  @JoinColumn({ name: 'practitioner_id' }) // 🔹 FK inversa
   practitioner: Practitioner;
 
   // Default slot length (en minutos) si doctor no define en rule

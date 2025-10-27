@@ -42,7 +42,7 @@ export interface UserSession {
 @Injectable()
 @WebSocketGateway({
   cors: {
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: process.env.FRONTEND_URL || 'http://localhost:5173/',
     methods: ['GET', 'POST'],
   },
 })
@@ -69,6 +69,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       socketId: socket.id,
       timestamp: new Date(),
     });
+
+    
 
     // Generar saludo inicial del IA
     this.sendWelcomeMessage(socket);
@@ -131,6 +133,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
       userId: session.userId,
       sessionId: data.sessionId,
     };
+//
+    Logger.log('propie message',userMessage)
 
     session.messages.push(userMessage);
 
@@ -142,6 +146,8 @@ export class ChatGateway implements OnGatewayInit, OnGatewayConnection, OnGatewa
     // Enviar a N8N y obtener respuesta de IA
     try {
       const aiResponse = await this.getAIResponse(data.message, session);
+
+      console.log('mensagge ia', aiResponse)
 
       const aiMessage: ChatMessage = {
         id: `msg-${Date.now()}-ai`,
