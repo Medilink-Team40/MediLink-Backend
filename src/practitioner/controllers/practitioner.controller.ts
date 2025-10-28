@@ -11,7 +11,7 @@ import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../auth/roles/roles.guard';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse } from '../../types/fhir.types';
-import {  PractitionerIdentifierType } from '../practitioner.types';
+import { PractitionerIdentifierType } from '../practitioner.types';
 import { UserData } from '../../auth/auth.types';
 
 @ApiTags('Practitioner')

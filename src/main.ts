@@ -10,6 +10,7 @@ async function bootstrap() {
   app.enableCors({
     origin: ['*'],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
 
@@ -18,6 +19,17 @@ async function bootstrap() {
     .setTitle('MediLink API')
     .setDescription('La API de MediLink para la gestión de citas médicas.')
     .setVersion('1.0')
+    .addBearerAuth(
+      {
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'JWT',
+        name: 'JWT',
+        description: 'Enter JWT token',
+        in: 'header',
+      },
+      'JWT-auth', // This name here is important for matching up with @ApiBearerAuth()
+    )
     .addTag('MediLink')
     .build();
   const document = SwaggerModule.createDocument(app, config);
