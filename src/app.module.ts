@@ -14,7 +14,6 @@ import { HttpModule } from '@nestjs/axios';
 import { CalendarModule } from './calendar/calendar.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { AppointmentModule } from './appointment/appointment.module';
-import { PatientModule } from './patient/patient.module';
 
 @Module({
   imports: [
@@ -35,7 +34,6 @@ import { PatientModule } from './patient/patient.module';
     CalendarModule,
     AvailabilityModule,
     AppointmentModule,
-    PatientModule,
   ],
   controllers: [],
   providers: [AppService],

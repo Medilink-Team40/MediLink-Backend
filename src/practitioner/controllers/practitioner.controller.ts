@@ -15,7 +15,6 @@ import {  PractitionerIdentifierType } from '../practitioner.types';
 import { UserData } from '../../auth/auth.types';
 
 @ApiTags('Practitioner')
-// @ApiBearerAuth('JWT')
 @Controller('practitioner')
 @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class PractitionerController {
@@ -24,7 +23,7 @@ export class PractitionerController {
     private readonly service: PractitionerService,
   ) { }
 
-  // @Roles(RolesTypes.ADMIN)
+  @Roles(RolesTypes.ADMIN)
   @Post('register-practitioner')
   @ApiOperation({
     summary: 'Registrar un nuevo profesional',
@@ -80,7 +79,7 @@ export class PractitionerController {
     return user;
   }
 
-  // @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
+  @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Get('me')
   @ApiOperation({ summary: 'Obtener perfil del profesional actual', description: 'Retorna los datos del profesional autenticado.' })
   @ApiResponse({
@@ -140,7 +139,7 @@ export class PractitionerController {
     return practitioner;
   }
 
-  // @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
+  @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Patch('update-profile')
   @ApiOperation({
     summary: 'Actualizar perfil del profesional',
