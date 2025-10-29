@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, ParseUUIDPipe } from '@nestjs/common';
 import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { AvailabilityService } from './availability.service';
 import { CreateAvailabilityDto, UpdateAvailabilityDto, AvailableSlotsResponseDto } from './dtos';
@@ -76,5 +76,49 @@ export class AvailabilityController {
     @Query('toDate') toDate: string,
   ): Promise<AvailableSlotsResponseDto[]> {
     return this.availabilityService.findAvailableSlots(calendarId, new Date(fromDate), new Date(toDate));
+  }
+
+  @Get('practitioner/:practitionerId/slots')
+  @ApiOperation({
+    summary: 'Obtener todos los turnos disponibles de un doctor por su ID',
+    description: 'Este endpoint es accesible para pacientes y doctores. No requiere autenticación.',
+  })
+  @ApiParam({
+    name: 'practitionerId',
+    type: 'string',
+    description: 'UUID del doctor (keycloakId)',
+    example: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+  })
+  @ApiQuery({
+    name: 'fromDate',
+    type: 'string',
+    description: 'Fecha de inicio (YYYY-MM-DD). Por defecto, hoy.',
+    required: false,
+    example: '2025-11-01',
+  })
+  @ApiQuery({
+    name: 'toDate',
+    type: 'string',
+    description: 'Fecha de fin (YYYY-MM-DD). Por defecto, 30 días a partir de hoy.',
+    required: false,
+    example: '2025-11-30',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Lista de turnos disponibles por día para el doctor especificado.',
+    type: [AvailableSlotsResponseDto],
+  })
+  async findAvailableSlotsForPractitioner(
+    @Param('practitionerId', ParseUUIDPipe) practitionerId: string,
+    @Query('fromDate') fromDate?: string,
+    @Query('toDate') toDate?: string,
+  ): Promise<AvailableSlotsResponseDto[]> {
+    const start = fromDate ? new Date(fromDate) : new Date();
+    const end = toDate ? new Date(toDate) : new Date();
+    if (!toDate) {
+      end.setDate(start.getDate() + 30); // Por defecto, 30 días a partir de hoy
+    }
+
+    return this.availabilityService.findAvailableSlotsByPractitioner(practitionerId, start, end);
   }
 }

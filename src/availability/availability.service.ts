@@ -7,6 +7,7 @@ import { AppointmentEntity } from '../appointment/entity/appointment.entity';
 import { CreateAvailabilityDto } from './dtos/create-availability.dto';
 import { UpdateAvailabilityDto } from './dtos/update-availability.dto';
 import { AvailableSlotsResponseDto, AvailableSlotDto } from './dtos/available-slots.dto';
+import { Practitioner } from '../practitioner/entities/practitioner.entity';
 
 @Injectable()
 export class AvailabilityService {
@@ -19,6 +20,9 @@ export class AvailabilityService {
 
     @InjectRepository(AppointmentEntity)
     private readonly appointmentRepo: Repository<AppointmentEntity>,
+
+    @InjectRepository(Practitioner)
+    private readonly practitionerRepo: Repository<Practitioner>,
   ) {}
 
   async create(calendarId: string, dto: CreateAvailabilityDto): Promise<AvailabilityRule> {
@@ -129,5 +133,22 @@ export class AvailabilityService {
     }
 
     return result;
+  }
+
+  async findAvailableSlotsByPractitioner(
+    practitionerId: string,
+    fromDate: Date,
+    toDate: Date,
+  ): Promise<AvailableSlotsResponseDto[]> {
+    const practitioner = await this.practitionerRepo.findOne({
+      where: { keycloakId: practitionerId },
+      relations: ['calendar'],
+    });
+
+    if (!practitioner || !practitioner.calendar) {
+      throw new NotFoundException('Doctor o calendario no encontrado');
+    }
+
+    return this.findAvailableSlots(practitioner.calendar.id, fromDate, toDate);
   }
 }
