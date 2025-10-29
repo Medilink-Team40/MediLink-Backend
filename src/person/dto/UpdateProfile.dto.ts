@@ -1,14 +1,14 @@
-import { IsArray, ValidateNested } from 'class-validator';
+import {  ValidateNested } from 'class-validator';
 import { UpdateBasicDataDto } from './UpdateBasicData.dto';
 import { Type } from 'class-transformer';
-import { PractitionerQualificationDto } from './UpdateQualifications.dto';
-import { UpdateProfile } from '../../practitioner.types';
-import { HasRankOne } from '../../../decorators/fhir/HasRankOneTelecom';
+import { PractitionerQualificationDto } from '../../practitioner/dto/UpdateQualifications.dto';
+import { HasRankOne } from '../../decorators/fhir/HasRankOneTelecom';
 import { UpdateIdentifierDto } from './UpdateIdentifier.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { CreateTelecomDto } from '../../../dto/fhir/Telecom.dto';
+import { CreateTelecomDto } from './Telecom.dto';
+import { UpdatePerson } from '../../types/person.types';
 
-export class UpdateProfileDto implements UpdateProfile {
+export class UpdateProfileDto implements UpdatePerson {
   @ApiProperty({ type: UpdateBasicDataDto, description: 'Datos básicos del perfil del profesional', required: false })
   @ValidateNested()
   @Type(() => UpdateBasicDataDto)
@@ -19,15 +19,6 @@ export class UpdateProfileDto implements UpdateProfile {
   @Type(() => CreateTelecomDto)
   @HasRankOne({ message: 'Se requiere que al menos un telecom tenga rank 1' })
   readonly telecom?: CreateTelecomDto[];
-
-  @ApiProperty({
-    type: [PractitionerQualificationDto],
-    description: 'Cualificaciones del profesional',
-    required: false,
-  })
-  @ValidateNested()
-  @Type(() => PractitionerQualificationDto)
-  readonly qualifications?: PractitionerQualificationDto[];
 
   @ApiProperty({ type: [UpdateIdentifierDto], description: 'Identificadores del profesional', required: false })
   @ValidateNested()

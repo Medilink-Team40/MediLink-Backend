@@ -1,9 +1,7 @@
 import { Repository } from 'typeorm';
-import { UpdateBasicDataDto } from './dto/update/UpdateBasicData.dto';
-import { PractitionerQualificationDto } from './dto/update/UpdateQualifications.dto';
-import { UpdateIdentifierDto } from './dto/update/UpdateIdentifier.dto';
+import { PractitionerQualificationDto } from './dto/UpdateQualifications.dto';
 import { Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom } from './entities';
-import { CreateTelecomDto } from './dto';
+import { UpdatePerson } from '../types/person.types';
 export enum PractitionerIdentifierType {
   NI = 'NI',   // Número de matrícula profesional
   PRO = 'PRO', // Profesional
@@ -16,15 +14,9 @@ export interface QualificationCodes {
   display: string;
 }
 
-export interface UpdateProfile {
-  profile?: UpdateBasicDataDto;
-  telecom?: CreateTelecomDto[];
+export interface UpdatePractitionerProfile extends UpdatePerson {
   qualifications?: PractitionerQualificationDto[];
-  identifiers?: UpdateIdentifierDto[];
 }
-
-export type ProfileModuleValues = keyof UpdateProfile;
-export type AvailableUpdates = Record<ProfileModuleValues, (data: UpdateProfile[keyof UpdateProfile]) => void>;
 
 export type PractitionerUpdaterEntities = Repository<PractitionerTelecom | Practitioner | PractitionerQualification | PractitionerIdentifier>
 export type PractitionerUpdaterData = PractitionerTelecom | Practitioner | PractitionerQualification | PractitionerIdentifier

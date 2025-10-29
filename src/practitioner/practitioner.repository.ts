@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PractitionerRegisterDto } from './dto/PractitionerRegisterDto';
+import { PractitionerRegisterDto } from '../person/dto/CreatePersonDto';
 import { IPractitionerRepository } from './practitioner.dao';
 
 @Injectable()

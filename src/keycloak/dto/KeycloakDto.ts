@@ -1,6 +1,6 @@
-import { UserBaseCreation } from '../../types/user.types';
 import { Credentials } from '../keycloak.types';
 import { toKeycloakName } from '../../practitioner/adapter/toKeycloakName.adapter';
+import { PersonCreation } from '../../types/person.types';
 
 export class KeycloakCreateDto {
   public username: string;
@@ -10,7 +10,7 @@ export class KeycloakCreateDto {
   public enabled: boolean = true;
   public credentials: Credentials[];
 
-  constructor(user: UserBaseCreation) {
+  constructor(user: PersonCreation) {
     const { firstName, lastName } = toKeycloakName(user.name);
 
     this.username = firstName.replaceAll(' ', '_').toLowerCase();

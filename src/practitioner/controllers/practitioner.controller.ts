@@ -1,18 +1,20 @@
 import { Body, Controller, Get, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { RolesTypes } from '../../auth/auth.types';
 import { KeyCloakService } from '../../keycloak/services/create/create.service';
-import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
+import { CreatePersonDto as PractitionerRegisterDto } from '../../person/dto/CreatePersonDto';
 import { CatchError } from '../../decorators/errors.decorator';
 import { KeycloakCreateDto } from '../../keycloak/dto/KeycloakDto';
 import { PractitionerService } from '../service/practitioner/practitioner.service';
 import { Roles } from '../../auth/roles/roles.decorator';
-import { UpdateProfileDto } from '../dto/update/UpdateProfile.dto';
+import { UpdateProfileDto } from '../../person/dto/UpdateProfile.dto';
 import { AuthGuard } from '@nestjs/passport';
 import { RolesGuard } from '../../auth/roles/roles.guard';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse } from '../../types/fhir.types';
 import { PractitionerIdentifierType } from '../practitioner.types';
 import { UserData } from '../../auth/auth.types';
+import { UpdatePractitionerProfileDto } from '../dto/UpdatePractitionerProfile.dto';
+import { QualificationService } from '../service/qualification/qualification.service';
 
 @ApiTags('Practitioner')
 @Controller('practitioner')
@@ -21,13 +23,14 @@ export class PractitionerController {
   constructor(
     private readonly keycloak: KeyCloakService,
     private readonly service: PractitionerService,
-  ) { }
+    private readonly qualificationService: QualificationService,
+  ) {}
 
   @Roles(RolesTypes.ADMIN)
   @Post('register-practitioner')
   @ApiOperation({
     summary: 'Registrar un nuevo profesional',
-    description: 'Registra un nuevo profesional en el sistema y Keycloak.'
+    description: 'Registra un nuevo profesional en el sistema y Keycloak.',
   })
   @ApiBody({
     type: PractitionerRegisterDto,
@@ -75,13 +78,16 @@ export class PractitionerController {
       RolesTypes.PRACTITIONER,
     );
 
-    const user = await this.service.create(practitioner, keycloakid);
+    const user = await this.service.create(practitioner, keycloakid, RolesTypes.PRACTITIONER);
     return user;
   }
 
   @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Get('me')
-  @ApiOperation({ summary: 'Obtener perfil del profesional actual', description: 'Retorna los datos del profesional autenticado.' })
+  @ApiOperation({
+    summary: 'Obtener perfil del profesional actual',
+    description: 'Retorna los datos del profesional autenticado.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Perfil del profesional obtenido exitosamente.',
@@ -195,11 +201,17 @@ export class PractitionerController {
   @ApiResponse({ status: 200, description: 'Perfil actualizado exitosamente.' })
   @ApiResponse({ status: 400, description: 'Datos de actualización inválidos.' })
   @CatchError()
-  public async update(@Request() req: { user: UserData }, @Body() practitioner: UpdateProfileDto) {
+  public async update(@Request() req: { user: UserData }, @Body() practitioner: UpdatePractitionerProfileDto) {
     const id = req.user.id;
     const email = req.user.email;
+    const { qualifications = null, ...person } = practitioner;
 
-    await this.service.update({ ...practitioner, userId: id, email });
+    await this.service.update({ ...person, userId: id, email });
+
+    if (qualifications) {
+      await this.qualificationService.update(qualifications, id);
+    }
+
     return 'Profile updated successfully';
   }
 }

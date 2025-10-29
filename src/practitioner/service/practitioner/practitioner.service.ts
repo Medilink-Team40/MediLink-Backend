@@ -1,72 +1,24 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { RolesTypes } from '../../../auth/auth.types';
 import { Repository } from 'typeorm';
-import {
-  PractitionerQualificationDto,
-  UpdateProfileDto,
-  UpdateBasicDataDto,
-  PractitionerRegisterDto,
-  CreateTelecomDto,
-} from '../../../practitioner/dto/';
-import { Practitioner, PractitionerIdentifier, PractitionerQualification } from '../../../practitioner/entities';
-import { AvailableUpdates, UpdateProfile } from '../../../practitioner/practitioner.types';
-import { PractitionerUpdaterFactory } from '../../../practitioner/factory/updater.factory';
+import { Practitioner } from '../../../practitioner/entities';
+import { PractitionerUpdaterFactory } from '../../../person/factory/person-updater.factory';
+import { PersonService } from '../../../person/service/person/person.service';
 
 @Injectable()
-export class PractitionerService {
+export class PractitionerService extends PersonService<Practitioner> {
   constructor(
     @InjectRepository(Practitioner)
-    private readonly repository: Repository<Practitioner>,
-    @InjectRepository(PractitionerQualification)
-    private readonly updaterFactory: PractitionerUpdaterFactory,
-  ) {}
-
-  public async create(dto: PractitionerRegisterDto, id: string) {
-    const { repeatpassword, password, ...requiredData } = dto;
-    const entity = {
-      ...requiredData,
-      keycloakId: id,
-      active: false,
-      role: RolesTypes.PRACTITIONER,
-    } as unknown as Practitioner;
-
-    const newPractitioner = this.repository.create(entity);
-    return await this.repository.save(newPractitioner);
-  }
-
-  public async update(practitioner: UpdateProfileDto & { userId: string; email: string }) {
-    let promises: void[] = [];
-
-    const { userId, email, ...updatedData } = practitioner;
-    const updater = this.updaterFactory.create(practitioner.userId);
-    const modulesToUpdate = Object.keys(updatedData);
-    const updates: AvailableUpdates = {
-      ['telecom']: (data: CreateTelecomDto[]) => updater.telecom(data, email),
-      ['qualifications']: (data: PractitionerQualificationDto[]) => updater.qualifications(data),
-      ['identifiers']: (data: PractitionerIdentifier[]) => updater.identifiers(data),
-      ['profile']: (data: UpdateBasicDataDto) => updater.profile(data),
-    };
-
-    const data: Record<keyof UpdateProfile, UpdateProfile[keyof UpdateProfile]> = {
-      telecom: practitioner.telecom,
-      qualifications: practitioner.qualifications,
-      identifiers: practitioner.identifiers,
-      profile: practitioner.profile,
-    };
-
-    modulesToUpdate.forEach((name: keyof UpdateProfileDto) => {
-      if (!updates?.[name] || !data[name]) return;
-      promises.push(updates[name](data[name]));
-    });
-
-    if (promises.length > 0) await Promise.all(promises);
+    private readonly practitionerRepo: Repository<Practitioner>,
+    protected readonly updaterFactory: PractitionerUpdaterFactory,
+  ) {
+    super(practitionerRepo, updaterFactory);
   }
 
   public async findOne(keycloakId: string): Promise<Practitioner | null> {
-    return await this.repository.findOne({
+    return await this.practitionerRepo.findOne({
       where: { keycloakId },
-      relations: ['telecom', 'qualification', 'identifier', 'calendar'],
+      relations: ['telecom', 'identifier', 'calendar'],
     });
   }
 }

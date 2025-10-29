@@ -1,10 +1,11 @@
 import { Type } from 'class-transformer';
 import { IsBoolean, IsDateString, IsEnum, IsNotEmpty, ValidateNested } from 'class-validator';
-import { NameStructDto } from '../../../dto/fhir/NameStruct.dto';
+import { NameStructDto } from './NameStruct.dto';
 import { ApiProperty } from '@nestjs/swagger';
-import { FHIRExternalGender } from '../../../types/fhir.types';
+import { FHIRExternalGender } from '../../types/fhir.types';
+import { PersonUpdate } from '../../types/person.types';
 
-export class UpdateBasicDataDto {
+export class UpdateBasicDataDto implements PersonUpdate {
   @ApiProperty({ type: [NameStructDto], description: 'Nombres del profesional', required: false })
   @ValidateNested()
   @Type(() => NameStructDto)

@@ -1,7 +1,7 @@
 import { IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
-import { PractitionerIdentifierType } from '../../practitioner.types';
+import { PractitionerIdentifierType } from '../../practitioner/practitioner.types';
 import { ApiProperty } from '@nestjs/swagger';
-import { FHIRIdentifierUse } from '../../../types/fhir.types';
+import { FHIRIdentifierUse } from '../../types/fhir.types';
 
 export class UpdateIdentifierDto {
   @ApiProperty({

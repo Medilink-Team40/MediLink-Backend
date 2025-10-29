@@ -8,17 +8,17 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { UserBaseCreation } from '../../types/user.types';
 import { Type } from 'class-transformer';
-import { NameStructDto } from '../../dto/fhir/NameStruct.dto';
+import { NameStructDto } from './NameStruct.dto';
 import { EqualsTo } from '../../decorators/equals-to.decorator';
 import { HasRankOne } from '../../decorators/fhir/HasRankOneTelecom';
 import { NoDuplicateEmailInTelecom } from '../../decorators/fhir/NoDuplicateEmailInTelecom';
 import { ApiProperty } from '@nestjs/swagger';
 import { FHIRExternalGender } from '../../types/fhir.types';
-import { CreateTelecomDto } from '../../dto/fhir/Telecom.dto';
+import { CreateTelecomDto } from './Telecom.dto';
+import { PersonCreation } from '../../types/person.types';
 
-export class PractitionerRegisterDto implements UserBaseCreation {
+export class CreatePersonDto implements PersonCreation {
   @ApiProperty({ example: 'john.doe@example.com', description: 'Email del profesional' })
   @IsEmail()
   @IsNotEmpty()

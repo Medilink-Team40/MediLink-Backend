@@ -8,7 +8,7 @@ import {
   IsString,
   ValidateNested,
 } from 'class-validator';
-import { UserBaseCreation } from '../../types/user.types';
+import { UserBaseCreation } from '../../types/person.types';
 import { Type } from 'class-transformer';
 import { EqualsTo } from '../../decorators/equals-to.decorator';
 import { ApiProperty } from '@nestjs/swagger';

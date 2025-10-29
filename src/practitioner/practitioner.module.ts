@@ -7,7 +7,7 @@ import { Practitioner, PractitionerIdentifier, PractitionerQualification, Practi
 import { KeyCloakService } from '../keycloak/services/create/create.service';
 import { HttpModule } from '@nestjs/axios';
 import { PassportModule } from '@nestjs/passport';
-import { PractitionerUpdaterFactory } from './factory/updater.factory';
+import { PractitionerUpdaterFactory } from '../person/factory/person-updater.factory';
 import { QualificationController } from './controllers/qualification/qualification.controller';
 import { QualificationService } from './service/qualification/qualification.service';
 import { QualificationCode } from './entities/qualification-codes.entity';
