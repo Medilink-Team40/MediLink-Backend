@@ -25,7 +25,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       id: payload.sub,
       username: payload.preferred_username,
       email: payload.email,
-      roles: payload.resource_access['medilink-frontend'].roles,
+      roles: payload.realm_access.roles,
     };
   }
 }

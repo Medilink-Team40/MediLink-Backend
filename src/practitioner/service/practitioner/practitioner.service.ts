@@ -2,15 +2,15 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Practitioner } from '../../../practitioner/entities';
-import { PractitionerUpdaterFactory } from '../../../person/factory/person-updater.factory';
 import { PersonService } from '../../../person/service/person/person.service';
+import { PersonUpdaterFactory } from '../../../person/factory/person-updater.factory';
 
 @Injectable()
 export class PractitionerService extends PersonService<Practitioner> {
   constructor(
     @InjectRepository(Practitioner)
     private readonly practitionerRepo: Repository<Practitioner>,
-    protected readonly updaterFactory: PractitionerUpdaterFactory,
+    protected readonly updaterFactory: PersonUpdaterFactory,
   ) {
     super(practitionerRepo, updaterFactory);
   }

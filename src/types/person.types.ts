@@ -1,7 +1,9 @@
+import { Patient } from "../patient/entities/patient.entity";
 import { UpdateIdentifierDto } from "../person/dto";
 import { NameStructDto } from "../person/dto/NameStruct.dto";
 import { CreateTelecomDto, UpdateBasicDataDto } from "../practitioner/dto";
-import { FHIRExternalGender } from "../types/fhir.types";
+import { Practitioner } from "../practitioner/entities";
+import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses } from "../types/fhir.types";
 
 export interface PersonCreation {
   email: string;
@@ -21,6 +23,16 @@ export interface UpdatePerson {
   profile?: UpdateBasicDataDto;
   telecom?: CreateTelecomDto[];
   identifiers?: UpdateIdentifierDto[];
+}
+
+export interface TelecomEntity{
+  id: string;
+  system: FHIRTelecomSystem;
+  value: string;
+  use: TelecomUses;
+  rank: number;
+  practitioner: Practitioner | Patient;
+  practitionerId: string;
 }
 
 

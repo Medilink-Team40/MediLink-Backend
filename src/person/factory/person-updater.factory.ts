@@ -6,10 +6,10 @@ import {
   Practitioner,
 } from '../../practitioner/entities';
 import { Repository } from 'typeorm';
-import { PersonUpdater } from '../service/person/person-update.service';
+import { PersonUpdater } from '../service/person/update.service';
 
 @Injectable()
-export class PractitionerUpdaterFactory {
+export class PersonUpdaterFactory {
   constructor(
     @InjectRepository(PractitionerTelecom)
     private readonly telecomRepo: Repository<PractitionerTelecom>,

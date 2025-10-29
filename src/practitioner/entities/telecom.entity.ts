@@ -1,9 +1,10 @@
 import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn, Unique } from 'typeorm';
 import { Practitioner } from './practitioner.entity';
 import { FHIRTelecomSystem, TelecomUses } from '../../types/fhir.types';
+import { TelecomEntity } from '../../types/person.types';
 
 @Entity('practitioner_telecom')
-export class PractitionerTelecom {
+export class PractitionerTelecom implements TelecomEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 

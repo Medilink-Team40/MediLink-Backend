@@ -9,13 +9,13 @@ import {
   UpdateProfileDto,
 } from '../../dto';
 import { AvailableUpdates, UpdatePerson } from '../../../types/person.types';
-import { PractitionerUpdaterFactory } from '../../factory/person-updater.factory';
+import { PersonUpdaterFactory } from '../../factory/person-updater.factory';
 
 @Injectable()
 export abstract class PersonService<T extends ObjectLiteral> {
   constructor(
     protected readonly repository: Repository<T>,
-    protected readonly updaterFactory: PractitionerUpdaterFactory,
+    protected readonly updaterFactory: PersonUpdaterFactory,
   ) {}
 
   public async create(dto: CreatePersonDto, id: string, rol: RolesTypes.PATIENT | RolesTypes.PRACTITIONER) {
