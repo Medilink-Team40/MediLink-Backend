@@ -23,4 +23,4 @@ import { QualificationCode } from './entities/qualification-codes.entity';
   providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService],
   exports: [PractitionerService],
 })
-export class PractitionerModule {}
+export class PractitionerModule { }

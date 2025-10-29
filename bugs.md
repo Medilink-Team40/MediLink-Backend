@@ -40,3 +40,8 @@ Si encuentras un bug o comportamiento inesperado, por favor sigue los pasos a co
 ## 📋 Lista de Bugs Abiertos
 
 - [🟠] Error de Ejemplo (#1)
+
+```bash 
+mv .git_disabled .git
+git status
+```

@@ -8,6 +8,7 @@ import { CalendarEntity } from '../calendar/entity/calendar.entity';
 import { NotificationService } from '../notifications/notification.service';
 import { NotificationChannel, NotificationEventType } from '../notifications/notification.types';
 import { Practitioner } from '../practitioner/entities';
+import { Patient } from '../patient/entities/patient.entity';
 
 @Injectable()
 export class AppointmentService {
@@ -20,6 +21,9 @@ export class AppointmentService {
     @InjectRepository(Practitioner)
     private readonly practitionerRepo: Repository<Practitioner>,
 
+    @InjectRepository(Patient)
+    private readonly patientRepo: Repository<Patient>,
+
     @InjectRepository(CalendarEntity)
     private readonly calendarRepo: Repository<CalendarEntity>,
 
@@ -28,7 +32,7 @@ export class AppointmentService {
 
   async create(dto: CreateAppointmentDto) {
     const doctor = await this.practitionerRepo.findOneBy({ keycloakId: dto.doctorId });
-    const patient = await this.practitionerRepo.findOneBy({ keycloakId: dto.patientId });
+    const patient = await this.patientRepo.findOneBy({ keycloakId: dto.patientId });
 
     if (!doctor || !patient) throw new NotFoundException('Doctor o paciente no encontrados');
 

@@ -3,6 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, CreateDateColumn, Up
 import { ApiProperty } from '@nestjs/swagger';
 import { CalendarEntity } from '../../calendar/entity/calendar.entity';
 import { Practitioner } from '../../practitioner/entities/practitioner.entity';
+import { Patient } from '../../patient/entities/patient.entity';
 
 export enum AppointmentType {
   PRESENTIAL = 'presential',
@@ -30,8 +31,8 @@ export class AppointmentEntity {
   @ManyToOne(() => Practitioner, (d) => d.appointmentsAsDoctor, { nullable: false, eager: true })
   doctor: Practitioner;
 
-  @ManyToOne(() => Practitioner, (p) => p.appointmentsAsPatient, { nullable: false, eager: true })
-  patient: Practitioner;
+  @ManyToOne(() => Patient, (p) => p.appointmentsAsPatient, { nullable: false, eager: true })
+  patient: Patient;
 
   @ApiProperty()
   @Column()
