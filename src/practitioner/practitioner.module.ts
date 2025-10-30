@@ -11,16 +11,18 @@ import { PractitionerUpdaterFactory } from './factory/updater.factory';
 import { QualificationController } from './controllers/qualification/qualification.controller';
 import { QualificationService } from './service/qualification/qualification.service';
 import { QualificationCode } from './entities/qualification-codes.entity';
+import { CalendarService } from '../calendar/calendar.service';
+import { CalendarEntity } from '../calendar/entity/calendar.entity';
 
 @Module({
   imports: [
     HttpModule,
     PassportModule,
     KeycloakModule,
-    TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom, QualificationCode,CalendarEntity]),
+    TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom, QualificationCode, CalendarEntity]),
   ],
   controllers: [PractitionerController, QualificationController],
-  providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService,CalendarService],
+  providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService, CalendarService],
   exports: [PractitionerService],
 })
 export class PractitionerModule { }
