@@ -17,10 +17,10 @@ import { QualificationCode } from './entities/qualification-codes.entity';
     HttpModule,
     PassportModule,
     KeycloakModule,
-    TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom, QualificationCode]),
+    TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom, QualificationCode,CalendarEntity]),
   ],
   controllers: [PractitionerController, QualificationController],
-  providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService],
+  providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService,CalendarService],
   exports: [PractitionerService],
 })
 export class PractitionerModule { }

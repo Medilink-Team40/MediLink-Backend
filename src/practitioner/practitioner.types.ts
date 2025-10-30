@@ -24,7 +24,7 @@ export interface UpdateProfile {
 }
 
 export type ProfileModuleValues = keyof UpdateProfile;
-export type AvailableUpdates = Record<ProfileModuleValues, (data: UpdateProfile[keyof UpdateProfile]) => void>;
+export type AvailableUpdates = Record<ProfileModuleValues, (data: UpdateProfile[keyof UpdateProfile]) => Promise<void>>;
 
 export type PractitionerUpdaterEntities = Repository<PractitionerTelecom | Practitioner | PractitionerQualification | PractitionerIdentifier>
 export type PractitionerUpdaterData = PractitionerTelecom | Practitioner | PractitionerQualification | PractitionerIdentifier

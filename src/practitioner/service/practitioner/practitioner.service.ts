@@ -9,9 +9,11 @@ import {
   PractitionerRegisterDto,
   CreateTelecomDto,
 } from '../../../practitioner/dto/';
+import { CalendarService } from '../../../calendar/calendar.service';
 import { Practitioner, PractitionerIdentifier, PractitionerQualification } from '../../../practitioner/entities';
 import { AvailableUpdates, UpdateProfile } from '../../../practitioner/practitioner.types';
 import { PractitionerUpdaterFactory } from '../../../practitioner/factory/updater.factory';
+import { CalendarEntity } from '../../../calendar/entity/calendar.entity';
 
 @Injectable()
 export class PractitionerService {
@@ -20,6 +22,9 @@ export class PractitionerService {
     private readonly repository: Repository<Practitioner>,
     @InjectRepository(PractitionerQualification)
     private readonly updaterFactory: PractitionerUpdaterFactory,
+    @InjectRepository(CalendarEntity)
+    private readonly calendarRepo: Repository<CalendarEntity>,
+    private readonly calendarService: CalendarService,
   ) {}
 
   public async create(dto: PractitionerRegisterDto, id: string) {
@@ -32,11 +37,13 @@ export class PractitionerService {
     } as unknown as Practitioner;
 
     const newPractitioner = this.repository.create(entity);
-    return await this.repository.save(newPractitioner);
+    const savedPractitioner = await this.repository.save(newPractitioner);
+    await this.calendarService.createOrGetCalendar(id);
+    return savedPractitioner;
   }
 
   public async update(practitioner: UpdateProfileDto & { userId: string; email: string }) {
-    let promises: void[] = [];
+    const promises: Promise<void>[] = [];
 
     const { userId, email, ...updatedData } = practitioner;
     const updater = this.updaterFactory.create(practitioner.userId);
