@@ -12,6 +12,7 @@ import { QualificationController } from './controllers/qualification/qualificati
 import { QualificationService } from './service/qualification/qualification.service';
 import { QualificationCode } from './entities/qualification-codes.entity';
 import { CalendarModule } from '../calendar/calendar.module';
+import { CalendarService } from '../calendar/calendar.service';
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { CalendarModule } from '../calendar/calendar.module';
     TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom, QualificationCode]),
   ],
   controllers: [PractitionerController, QualificationController],
-  providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService],
-  exports: [PractitionerService],
+  providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService, CalendarService],
+  exports: [PractitionerService, CalendarService],
 })
 export class PractitionerModule { }
