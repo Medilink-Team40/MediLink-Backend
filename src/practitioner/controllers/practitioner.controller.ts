@@ -27,7 +27,7 @@ export class PractitionerController {
   @Post('register-practitioner')
   @ApiOperation({
     summary: 'Registrar un nuevo profesional',
-    description: 'Registra un nuevo profesional en el sistema y Keycloak.'
+    description: 'Registra un nuevo profesional en el sistema y Keycloak.',
   })
   @ApiBody({
     type: PractitionerRegisterDto,

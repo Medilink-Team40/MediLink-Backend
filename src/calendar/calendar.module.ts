@@ -10,6 +10,6 @@ import { AppointmentEntity } from '../appointment/entity/appointment.entity';
   imports: [TypeOrmModule.forFeature([CalendarEntity, Practitioner, AppointmentEntity])],
   controllers: [CalendarController],
   providers: [CalendarService],
-  exports: [CalendarService],
+  exports: [CalendarService, TypeOrmModule.forFeature([AppointmentEntity])],
 })
 export class CalendarModule {}
