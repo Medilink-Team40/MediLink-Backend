@@ -13,6 +13,7 @@ import { QualificationService } from './service/qualification/qualification.serv
 import { QualificationCode } from './entities/qualification-codes.entity';
 import { CalendarModule } from '../calendar/calendar.module';
 import { CalendarService } from '../calendar/calendar.service';
+import { CalendarEntity } from '../calendar/entity/calendar.entity';
 
 @Module({
   imports: [
@@ -20,7 +21,7 @@ import { CalendarService } from '../calendar/calendar.service';
     PassportModule,
     KeycloakModule,
     CalendarModule,
-    TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom, QualificationCode]),
+    TypeOrmModule.forFeature([Practitioner, PractitionerIdentifier, PractitionerQualification, PractitionerTelecom, QualificationCode, CalendarEntity]),
   ],
   controllers: [PractitionerController, QualificationController],
   providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService, CalendarService],
