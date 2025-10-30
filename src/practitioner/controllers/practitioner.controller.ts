@@ -21,7 +21,7 @@ export class PractitionerController {
   constructor(
     private readonly keycloak: KeyCloakService,
     private readonly service: PractitionerService,
-  ) { }
+  ) {}
 
   @Roles(RolesTypes.ADMIN)
   @Post('register-practitioner')
@@ -81,7 +81,10 @@ export class PractitionerController {
 
   @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Get('me')
-  @ApiOperation({ summary: 'Obtener perfil del profesional actual', description: 'Retorna los datos del profesional autenticado.' })
+  @ApiOperation({
+    summary: 'Obtener perfil del profesional actual',
+    description: 'Retorna los datos del profesional autenticado.',
+  })
   @ApiResponse({
     status: 200,
     description: 'Perfil del profesional obtenido exitosamente.',

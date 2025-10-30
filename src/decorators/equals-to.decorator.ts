@@ -4,7 +4,7 @@ import { registerDecorator, ValidationOptions, ValidationArguments } from 'class
 import { IsEqualsTo } from '../class-validator/match.constraint';
 
 export function EqualsTo(property: string, validationOptions?: ValidationOptions) {
-  return function (object: Object, propertyName: string) {
+  return function (object: object, propertyName: string) {
     registerDecorator({
       target: object.constructor,
       propertyName: propertyName,

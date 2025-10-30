@@ -16,7 +16,11 @@ export class PractitionerQualificationDto {
   @IsDateString()
   readonly periodStart: Date;
 
-  @ApiProperty({ example: '2025-06-01', description: 'Fecha de fin del período de cualificación (YYYY-MM-DD)', required: false })
+  @ApiProperty({
+    example: '2025-06-01',
+    description: 'Fecha de fin del período de cualificación (YYYY-MM-DD)',
+    required: false,
+  })
   @IsOptional()
   @IsDateString()
   readonly periodEnd: Date;

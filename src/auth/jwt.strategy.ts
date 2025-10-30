@@ -44,7 +44,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       sub: payload.sub,
       username: payload.preferred_username,
       email: payload.email,
-      roles: roles
+      roles: roles,
     });
 
     return {
@@ -53,7 +53,7 @@ export class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
       email: payload.email,
       firstName: payload.given_name,
       lastName: payload.family_name,
-      roles: roles
+      roles: payload.resource_access['medilink-frontend'].roles,
     };
   }
 }

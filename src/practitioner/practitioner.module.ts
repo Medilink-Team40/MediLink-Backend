@@ -34,4 +34,4 @@ import { CalendarEntity } from '../calendar/entity/calendar.entity';
   providers: [KeyCloakService, PractitionerService, PractitionerUpdaterFactory, QualificationService, CalendarService],
   exports: [PractitionerService, CalendarService],
 })
-export class PractitionerModule { }
+export class PractitionerModule {}

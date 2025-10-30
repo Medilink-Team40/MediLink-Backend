@@ -11,8 +11,8 @@ export function CatchError(errorHandler?: (error: any) => any) {
         return result;
       } catch (error) {
         if (axios.isAxiosError(error)) {
-          console.log("🚀 ~ CatchError ~ error:", error)
-          const err = error as AxiosError<any>;
+          console.log('🚀 ~ CatchError ~ error:', error);
+          const err = error;
           const status = err.response?.status || HttpStatus.INTERNAL_SERVER_ERROR;
           const message = err.response?.data?.message || err.message || 'Error en Axios';
           console.error(`❌ Axios error (${status}):`, message);
@@ -20,8 +20,8 @@ export function CatchError(errorHandler?: (error: any) => any) {
           throw new HttpException(message, status);
         }
 
-        if(error instanceof HttpException){
-          throw error
+        if (error instanceof HttpException) {
+          throw error;
         }
 
         console.error('❌ Error inesperado:', error);

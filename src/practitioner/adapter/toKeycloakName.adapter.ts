@@ -1,4 +1,4 @@
-import { NameStruct } from "../../types/fhir.types";
+import { NameStruct } from '../../types/fhir.types';
 
 export const toKeycloakName = (name: NameStruct[]) => {
   let lastName = '';

@@ -26,20 +26,20 @@ export enum PostgresErrorCode {
   FOREIGN_KEY_VIOLATION = '23503',
   NOT_NULL_VIOLATION = '23502',
   CHECK_VIOLATION = '23514',
-  
+
   // Class 42 — Syntax Error or Access Rule Violation
   TABLE_NOT_FOUND = '42P01',
-  
+
   // Class 08 — Connection Exception
   CONNECTION_FAILURE = '08006',
-  
+
   // Class 23 — Invalid Transaction State
   DEADLOCK_DETECTED = '40P01',
 }
 
 /**
  * Maneja errores de TypeORM y los convierte en HttpExceptions apropiadas
- * 
+ *
  * @param error - El error capturado
  * @param customMessages - Mensajes personalizados por código de error
  * @returns HttpException
@@ -52,7 +52,7 @@ export function handleTypeOrmError(
   // Error de consulta SQL fallida (QueryFailedError)
   if (error instanceof QueryFailedError) {
     const queryError = error as QueryError;
-    const code = queryError.code as PostgresErrorCode | string | undefined;
+    const code = queryError.code;
 
     console.error('🔴 Error de consulta SQL:', {
       code,
@@ -98,16 +98,10 @@ export function handleTypeOrmError(
         );
 
       case PostgresErrorCode.TABLE_NOT_FOUND:
-        return new HttpException(
-          'Tabla no encontrada en la base de datos',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        return new HttpException('Tabla no encontrada en la base de datos', HttpStatus.INTERNAL_SERVER_ERROR);
 
       case PostgresErrorCode.CONNECTION_FAILURE:
-        return new HttpException(
-          'Error de conexión a la base de datos',
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        return new HttpException('Error de conexión a la base de datos', HttpStatus.INTERNAL_SERVER_ERROR);
 
       case PostgresErrorCode.DEADLOCK_DETECTED:
         return new HttpException(
@@ -116,19 +110,13 @@ export function handleTypeOrmError(
         );
 
       default:
-        return new HttpException(
-          `Error de base de datos: ${error.message}`,
-          HttpStatus.INTERNAL_SERVER_ERROR,
-        );
+        return new HttpException(`Error de base de datos: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
     }
   }
 
   // Error de propiedad no encontrada
   if (error instanceof EntityPropertyNotFoundError) {
-    return new HttpException(
-      `Propiedad no encontrada: ${error.message}`,
-      HttpStatus.BAD_REQUEST,
-    );
+    return new HttpException(`Propiedad no encontrada: ${error.message}`, HttpStatus.BAD_REQUEST);
   }
 
   // Error de lock optimista
@@ -142,10 +130,7 @@ export function handleTypeOrmError(
   // Otros errores de TypeORM
   if (error instanceof TypeORMError) {
     console.error('🔴 Error de TypeORM:', error.message);
-    return new HttpException(
-      `Error de base de datos: ${error.message}`,
-      HttpStatus.INTERNAL_SERVER_ERROR,
-    );
+    return new HttpException(`Error de base de datos: ${error.message}`, HttpStatus.INTERNAL_SERVER_ERROR);
   }
 
   // Si no es un error de TypeORM, devolverlo como HttpException genérico
@@ -155,15 +140,12 @@ export function handleTypeOrmError(
 
   // Si es otro tipo de error, crear una excepción genérica
   const message = error instanceof Error ? error.message : 'Error desconocido';
-  return new HttpException(
-    message,
-    HttpStatus.INTERNAL_SERVER_ERROR,
-  );
+  return new HttpException(message, HttpStatus.INTERNAL_SERVER_ERROR);
 }
 
 /**
  * Extrae el código de error de PostgreSQL de un error de TypeORM
- * 
+ *
  * @param error - El error capturado
  * @returns El código de error o undefined
  */
@@ -177,7 +159,7 @@ export function getPostgresErrorCode(error: unknown): string | undefined {
 
 /**
  * Verifica si un error es de un código específico
- * 
+ *
  * @param error - El error capturado
  * @param code - El código de error a verificar
  * @returns true si el error es del código especificado
@@ -185,4 +167,3 @@ export function getPostgresErrorCode(error: unknown): string | undefined {
 export function isErrorCode(error: unknown, code: PostgresErrorCode | string): boolean {
   return getPostgresErrorCode(error) === code;
 }
-

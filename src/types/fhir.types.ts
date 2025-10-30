@@ -34,4 +34,4 @@ export enum TelecomUses {
   FAMILY = 'family',
 }
 
-export const SYSTEM_INTERN = "https://medilink-backend-production-3d65.up.railway.app/api"
+export const SYSTEM_INTERN = 'https://medilink-backend-production-3d65.up.railway.app/api';

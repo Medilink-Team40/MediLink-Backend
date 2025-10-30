@@ -10,12 +10,21 @@ export class UpdateBasicDataDto {
   @Type(() => NameStructDto)
   name?: NameStructDto[];
 
-  @ApiProperty({ example: '1980-01-15', description: 'Fecha de nacimiento del profesional (YYYY-MM-DD)', required: false })
+  @ApiProperty({
+    example: '1980-01-15',
+    description: 'Fecha de nacimiento del profesional (YYYY-MM-DD)',
+    required: false,
+  })
   @IsDateString()
   @IsNotEmpty()
   birthDate?: Date;
 
-  @ApiProperty({ enum: FHIRExternalGender, example: FHIRExternalGender.MALE, description: 'Género del profesional', required: false })
+  @ApiProperty({
+    enum: FHIRExternalGender,
+    example: FHIRExternalGender.MALE,
+    description: 'Género del profesional',
+    required: false,
+  })
   @IsEnum(FHIRExternalGender)
   @IsNotEmpty()
   gender?: FHIRExternalGender;

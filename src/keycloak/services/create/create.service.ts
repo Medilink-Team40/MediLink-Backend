@@ -70,7 +70,7 @@ export class KeyCloakService {
     const roleDetails = await this.getRoleDetails(roleName);
     const realm = this.config.get('KEYCLOAK_TARGET_REALM') as string;
     const clientUuid = this.config.get('KEYCLOAK_ADMIN_CLIENT_UUID') as string;
-    const mappingUrl = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/users/${userId}/role-mappings/realm`
+    const mappingUrl = `${this.config.get('KEYCLOAK_BASE_URL')}/admin/realms/${realm}/users/${userId}/role-mappings/realm`;
     const roleBody = [
       {
         id: roleDetails.id,

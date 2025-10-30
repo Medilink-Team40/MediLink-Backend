@@ -1,14 +1,21 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import { ValidationPipe } from '@nestjs/common';
+import { LogLevel, ValidationPipe } from '@nestjs/common';
+import { LoggingInterceptor } from './logging.interceptor';
+import { AllExceptionsFilter } from './all-exceptions.filter';
 // import { Exceptions } from './filters/exceptions/exceptions.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
+   // --- Logger ---
+  const logLevels: LogLevel[] = ['log', 'error', 'warn', 'debug', 'verbose'];
+  app.useLogger(logLevels);
+  app.useGlobalInterceptors(new LoggingInterceptor());
+  app.useGlobalFilters(new AllExceptionsFilter());
   app.enableCors({
-    origin: ['http://localhost:5173',
+    origin: [
+      'http://localhost:5173',
       'https://medi-link-frotend-mk1u.vercel.app',
       'https://medilink-backend-production-3d65.up.railway.app',
     ],
@@ -39,7 +46,7 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, document);
 
   // 🧱 Middlewares globales
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+
   // app.useGlobalFilters(new Exceptions());
   app.useGlobalPipes(new ValidationPipe());
 

@@ -5,12 +5,12 @@ import { QualificationCode } from '../../entities/qualification-codes.entity';
 
 @Injectable()
 export class QualificationService {
-    constructor(
-        @InjectRepository(QualificationCode)
-        private readonly qualificationCodeRepository: Repository<QualificationCode>,
-    ) {}
+  constructor(
+    @InjectRepository(QualificationCode)
+    private readonly qualificationCodeRepository: Repository<QualificationCode>,
+  ) {}
 
-    public async getAllQualifications(): Promise<QualificationCode[]> {
-        return await this.qualificationCodeRepository.find();
-    }
+  public async getAllQualifications(): Promise<QualificationCode[]> {
+    return await this.qualificationCodeRepository.find();
+  }
 }
