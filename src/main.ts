@@ -9,8 +9,8 @@ async function bootstrap() {
 
   app.enableCors({
     origin: ['http://localhost:5173',
-      'https://medi-link-frotend-mk1u.vercel.app/*',
-      'https://medilink-backend-production-3d65.up.railway.app/'
+      'https://medi-link-frotend-mk1u.vercel.app',
+      'https://medilink-backend-production-3d65.up.railway.app',
     ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
