@@ -10,11 +10,11 @@ export class PatientTelecom {
   @Column({
     type: 'enum',
     enum: FHIRTelecomSystem,
-    nullable: false,
+    nullable: true,
   })
   system: FHIRTelecomSystem;
 
-  @Column({ type: 'varchar', nullable: false })
+  @Column({ type: 'varchar', nullable: true })
   value: string;
 
   @Column({
@@ -24,7 +24,7 @@ export class PatientTelecom {
   })
   use: TelecomUses;
 
-  @Column({ type: 'integer', nullable: false })
+  @Column({ type: 'integer', nullable: true })
   rank: number;
 
   @ManyToOne(() => Patient, (patient) => patient.telecom, {
