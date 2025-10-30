@@ -8,12 +8,14 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
   app.enableCors({
-    origin: ['http://localhost:5173','https://medi-link-frotend-mk1u.vercel.app'],
+    origin: ['http://localhost:5173',
+      'https://medi-link-frotend-mk1u.vercel.app/*',
+      'https://medilink-backend-production-3d65.up.railway.app/'
+    ],
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
     credentials: true,
     allowedHeaders: ['Content-Type', 'Authorization'],
   });
-  
 
   // 📘 Swagger config
   const config = new DocumentBuilder()
