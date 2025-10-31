@@ -13,6 +13,7 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse } from '../../types/fhir.types';
 import { PractitionerIdentifierType } from '../practitioner.types';
 import { UserData } from '../../auth/auth.types';
+import { Roles } from '../../auth/roles/roles.decorator';
 
 @ApiTags('Practitioner')
 @Controller('practitioner')
@@ -140,7 +141,7 @@ export class PractitionerController {
     return practitioner;
   }
 
-  // @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
+  @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Patch('update-profile')
   @ApiOperation({
     summary: 'Actualizar perfil del profesional',
