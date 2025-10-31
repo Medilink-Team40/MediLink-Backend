@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { RolesTypes } from '../../auth/auth.types';
 import { KeyCloakService } from '../../keycloak/services/create/create.service';
 import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
@@ -138,6 +138,7 @@ export class PractitionerController {
   @CatchError()
   public async getCurrentPractitioner(@Request() req: { user: UserData }) {
     const keycloakId = req.user.id;
+    Logger.log('id del user', keycloakId);
     const practitioner = await this.service.findOne(keycloakId);
     return practitioner;
   }

@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { CalendarEntity } from './entity/calendar.entity';
@@ -22,6 +22,7 @@ export class CalendarService {
   ) {}
 
   async createOrGetCalendar(doctorKeycloakId: string, dto?: CreateCalendarDto): Promise<CalendarEntity> {
+    Logger.log('id del user', keycloakId);
     const doctor = await this.practitionerRepo.findOne({
       where: { keycloakId: doctorKeycloakId },
       relations: ['calendar'],

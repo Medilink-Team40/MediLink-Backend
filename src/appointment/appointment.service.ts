@@ -32,7 +32,9 @@ export class AppointmentService {
 
   async create(dto: CreateAppointmentDto) {
     const doctor = await this.practitionerRepo.findOneBy({ keycloakId: dto.doctorId });
+    Logger.log('id del Doctor', dto.doctorId);
     const patient = await this.patientRepo.findOneBy({ keycloakId: dto.patientId });
+    Logger.log('id del paciente', dto.patientId);
 
     if (!doctor || !patient) throw new NotFoundException('Doctor o paciente no encontrados');
 
