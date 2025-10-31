@@ -5,10 +5,10 @@ import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
 import { CatchError } from '../../decorators/errors.decorator';
 import { KeycloakCreateDto } from '../../keycloak/dto/KeycloakDto';
 import { PractitionerService } from '../service/practitioner/practitioner.service';
-import { Roles } from '../../auth/roles/roles.decorator';
+// import { Roles } from '../../auth/roles/roles.decorator';
 import { UpdateProfileDto } from '../dto/update/UpdateProfile.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { RolesGuard } from '../../auth/roles/roles.guard';
+// import { AuthGuard } from '@nestjs/passport';
+// import { RolesGuard } from '../../auth/roles/roles.guard';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse } from '../../types/fhir.types';
 import { PractitionerIdentifierType } from '../practitioner.types';
@@ -16,14 +16,14 @@ import { UserData } from '../../auth/auth.types';
 
 @ApiTags('Practitioner')
 @Controller('practitioner')
-@UseGuards(AuthGuard('jwt'), RolesGuard)
+// @UseGuards(AuthGuard('jwt'), RolesGuard)
 export class PractitionerController {
   constructor(
     private readonly keycloak: KeyCloakService,
     private readonly service: PractitionerService,
   ) {}
 
-  @Roles(RolesTypes.ADMIN)
+  // @Roles(RolesTypes.ADMIN)
   @Post('register-practitioner')
   @ApiOperation({
     summary: 'Registrar un nuevo profesional',
@@ -79,7 +79,7 @@ export class PractitionerController {
     return user;
   }
 
-  @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
+  // @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Get('me')
   @ApiOperation({
     summary: 'Obtener perfil del profesional actual',
@@ -142,7 +142,7 @@ export class PractitionerController {
     return practitioner;
   }
 
-  @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
+  // @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
   @Patch('update-profile')
   @ApiOperation({
     summary: 'Actualizar perfil del profesional',
