@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Patch, Post, Request, UseGuards, Param} from '@nestjs/common';
+import { Body, Controller, Get, Logger, Patch, Post, Request, UseGuards, Param, Query } from '@nestjs/common';
 import { RolesTypes } from '../../auth/auth.types';
 import { KeyCloakService } from '../../keycloak/services/create/create.service';
 import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
@@ -22,7 +22,7 @@ export class PractitionerController {
   constructor(
     private readonly keycloak: KeyCloakService,
     private readonly service: PractitionerService,
-  ) {}
+  ) { }
 
   // @Roles(RolesTypes.ADMIN)
   @Post('register-practitioner')
@@ -139,6 +139,31 @@ export class PractitionerController {
     Logger.log('id del user', id);
     const practitioner = await this.service.findOne(id);
     return practitioner;
+  }
+
+  @Get('unprotected/by-qualification')
+  @ApiOperation({
+    summary: 'Obtener doctores por cualificación (no protegido)',
+    description: 'Permite buscar doctores por su cualificación sin necesidad de autenticación.',
+  })
+  @ApiResponse({ status: 200, description: 'Lista de doctores obtenida exitosamente.' })
+  @ApiResponse({ status: 404, description: 'No se encontraron doctores con esa cualificación.' })
+  @CatchError()
+  public async getPractitionersByQualification(@Query('qualification') qualification: string) {
+    const practitioners = await this.service.findByQualification(qualification);
+    return practitioners;
+  }
+
+  @Get('unprotected/all-with-calendar')
+  @ApiOperation({
+    summary: 'Obtener todos los doctores con sus calendarios (no protegido)',
+    description: 'Devuelve una lista de todos los doctores con sus turnos y calendarios, sin necesidad de autenticación.',
+  })
+  @ApiResponse({ status: 200, description: 'Lista de doctores con calendarios obtenida exitosamente.' })
+  @CatchError()
+  public async getAllPractitionersWithCalendar() {
+    const practitioners = await this.service.findAllWithCalendar();
+    return practitioners;
   }
 
   @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)

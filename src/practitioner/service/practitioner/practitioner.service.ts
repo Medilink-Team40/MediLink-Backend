@@ -76,4 +76,21 @@ export class PractitionerService {
       relations: ['telecom', 'qualification', 'identifier', 'calendar'],
     });
   }
+
+  public async findByQualification(qualificationCode: string): Promise<Practitioner[]> {
+    return await this.repository
+      .createQueryBuilder('practitioner')
+      .leftJoinAndSelect('practitioner.qualification', 'qualification')
+      .where('qualification.code = :qualificationCode', { qualificationCode })
+      .leftJoinAndSelect('practitioner.telecom', 'telecom')
+      .leftJoinAndSelect('practitioner.identifier', 'identifier')
+      .leftJoinAndSelect('practitioner.calendar', 'calendar')
+      .getMany();
+  }
+
+  public async findAllWithCalendar(): Promise<Practitioner[]> {
+    return await this.repository.find({
+      relations: ['telecom', 'qualification', 'identifier', 'calendar'],
+    });
+  }
 }
