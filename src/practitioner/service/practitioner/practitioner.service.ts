@@ -14,6 +14,11 @@ import { Practitioner, PractitionerIdentifier, PractitionerQualification } from 
 import { AvailableUpdates, UpdateProfile } from '../../../practitioner/practitioner.types';
 import { PractitionerUpdaterFactory } from '../../../practitioner/factory/updater.factory';
 import { CalendarEntity } from '../../../calendar/entity/calendar.entity';
+import { PractitionerAvailabilityResponseDto, AvailabilityDayDto, TimeSlotDto } from '../../dto';
+import { NotFoundException } from '@nestjs/common';
+import { format } from 'date-fns'; // 'getDay' no se usa
+import { es } from 'date-fns/locale';
+import { AppointmentStatus, AppointmentEntity } from '../../../appointment/entity/appointment.entity'; // Importar AppointmentEntity
 
 @Injectable()
 export class PractitionerService {
@@ -29,7 +34,7 @@ export class PractitionerService {
   ) {}
 
   public async create(dto: PractitionerRegisterDto, id: string) {
-    const { repeatpassword, password, ...requiredData } = dto;
+    const { repeatpassword: _repeatpassword, password: _password, ...requiredData } = dto; // Marcar como ignorados
     const entity = {
       ...requiredData,
       keycloakId: id,
@@ -41,6 +46,52 @@ export class PractitionerService {
     const savedPractitioner = await this.repository.save(newPractitioner);
     await this.calendarService.createOrGetCalendar(id);
     return savedPractitioner;
+  }
+
+  public async getPractitionerAvailability(practitionerId: string): Promise<PractitionerAvailabilityResponseDto> {
+    const practitioner = await this.repository.findOne({
+      where: { keycloakId: practitionerId },
+      relations: ['appointmentsAsDoctor'], // Cargar las citas del doctor
+    });
+
+    if (!practitioner) {
+      throw new NotFoundException(`Practitioner with ID ${practitionerId} not found`);
+    }
+
+    const appointments: AppointmentEntity[] = practitioner.appointmentsAsDoctor || [];
+
+    // Agrupar citas por fecha
+    const groupedAppointments = appointments.reduce((acc: Record<string, AppointmentEntity[]>, appointment) => {
+      const dateKey = format(appointment.startAt, 'yyyy-MM-dd');
+      if (!acc[dateKey]) {
+        acc[dateKey] = [];
+      }
+      acc[dateKey].push(appointment);
+      return acc;
+    }, {});
+
+    const availability: AvailabilityDayDto[] = Object.keys(groupedAppointments).map((dateKey: string) => {
+      const dayAppointments: AppointmentEntity[] = groupedAppointments[dateKey];
+      const firstAppointmentDate = dayAppointments[0].startAt; // Tomar la fecha de la primera cita para obtener el día de la semana
+
+      const timeSlots: TimeSlotDto[] = dayAppointments.map((appointment: AppointmentEntity) => ({
+        startTime: format(appointment.startAt, 'HH:mm'),
+        endTime: format(appointment.endAt, 'HH:mm'),
+        available: appointment.status !== AppointmentStatus.CONFIRMED && appointment.status !== AppointmentStatus.OPEN, // Considerar no disponible si está confirmada o abierta
+        appointmentId: appointment.id,
+      }));
+
+      return {
+        date: dateKey,
+        dayOfWeek: format(firstAppointmentDate, 'EEEE', { locale: es }), // Obtener el día de la semana en español
+        timeSlots: timeSlots,
+      };
+    });
+
+    return {
+      practitionerId: practitioner.keycloakId,
+      availability: availability,
+    };
   }
 
   public async update(practitioner: UpdateProfileDto) {

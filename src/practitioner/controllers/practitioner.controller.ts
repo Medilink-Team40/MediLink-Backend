@@ -13,6 +13,8 @@ import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse } from '../../types/fhir.types';
 import { PractitionerIdentifierType } from '../practitioner.types';
 import { Roles } from '../../auth/roles/roles.decorator';
+import { PractitionerAvailabilityResponseDto } from '../dto';
+import { ApiParam } from '@nestjs/swagger';
 
 @ApiTags('Practitioner')
 @Controller('practitioner')
@@ -156,13 +158,30 @@ export class PractitionerController {
   @Get('unprotected/all-with-calendar')
   @ApiOperation({
     summary: 'Obtener todos los doctores con sus calendarios (no protegido)',
-    description: 'Devuelve una lista de todos los doctores con sus turnos y calendarios, sin necesidad de autenticación.',
+    description:'Devuelve una lista de todos los doctores con sus turnos y calendarios, sin necesidad de autenticación.',
   })
   @ApiResponse({ status: 200, description: 'Lista de doctores con calendarios obtenida exitosamente.' })
   @CatchError()
   public async getAllPractitionersWithCalendar() {
     const practitioners = await this.service.findAllWithCalendar();
     return practitioners;
+  }
+
+  @Get(':practitionerId/availability')
+  @ApiOperation({
+    summary: 'Obtener disponibilidad de un profesional',
+    description: 'Devuelve la disponibilidad de turnos de un profesional específico por su ID, sin necesidad de autenticación de rol.',
+  })
+  @ApiParam({ name: 'practitionerId', description: 'ID del profesional', type: String, example: 'doctor-123' })
+  @ApiResponse({
+    status: 200,
+    description: 'Disponibilidad del profesional obtenida exitosamente.',
+    type: PractitionerAvailabilityResponseDto,
+  })
+  @ApiResponse({ status: 404, description: 'Profesional no encontrado.' })
+  @CatchError()
+  public async getPractitionerAvailability(@Param('practitionerId') practitionerId: string): Promise<PractitionerAvailabilityResponseDto> {
+    return this.service.getPractitionerAvailability(practitionerId);
   }
 
   @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)

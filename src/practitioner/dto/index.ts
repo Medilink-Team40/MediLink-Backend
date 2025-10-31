@@ -1,5 +1,6 @@
 export * from '../../dto/fhir/NameStruct.dto';
 export * from './PractitionerRegisterDto';
+export * from './practitioner-availability.dto';
 export * from '../../dto/fhir/Telecom.dto';
 export * from './update/UpdateBasicData.dto';
 export * from './update/UpdateProfile.dto';
