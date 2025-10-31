@@ -7,9 +7,27 @@ import { HasRankOne } from '../../../decorators/fhir/HasRankOneTelecom';
 import { UpdateIdentifierDto } from './UpdateIdentifier.dto';
 import { ApiProperty } from '@nestjs/swagger';
 import { CreateTelecomDto } from '../../../dto/fhir/Telecom.dto';
+import { IsString, IsOptional, IsEmail } from 'class-validator';
 
 export class UpdateProfileDto implements UpdateProfile {
+  @ApiProperty({
+    description: 'ID del profesional',
+    example: 'a1b2c3d4-e5f6-7890-1234-567890abcdef',
+    required: true,
+  })
+  @IsString()
+  readonly id: string;
+
+  @ApiProperty({
+    description: 'Email del profesional',
+    example: 'john.doe@example.com',
+    required: true,
+  })
+  @IsEmail()
+  readonly email: string;
+
   @ApiProperty({ type: UpdateBasicDataDto, description: 'Datos básicos del perfil del profesional', required: false })
+  @IsOptional()
   @ValidateNested()
   @Type(() => UpdateBasicDataDto)
   readonly profile?: UpdateBasicDataDto;

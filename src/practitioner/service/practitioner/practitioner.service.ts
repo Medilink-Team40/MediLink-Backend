@@ -43,11 +43,11 @@ export class PractitionerService {
     return savedPractitioner;
   }
 
-  public async update(practitioner: UpdateProfileDto & { userId: string; email: string }) {
+  public async update(practitioner: UpdateProfileDto) {
     const promises: Promise<void>[] = [];
 
-    const { userId, email, ...updatedData } = practitioner;
-    const updater = this.updaterFactory.create(practitioner.userId);
+    const { id, email, ...updatedData } = practitioner;
+    const updater = this.updaterFactory.create(id);
     const modulesToUpdate = Object.keys(updatedData);
     const updates: AvailableUpdates = {
       ['telecom']: (data: CreateTelecomDto[]) => updater.telecom(data, email),

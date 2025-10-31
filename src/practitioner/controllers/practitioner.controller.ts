@@ -12,7 +12,6 @@ import { UpdateProfileDto } from '../dto/update/UpdateProfile.dto';
 import { ApiBody, ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses, FHIRIdentifierUse } from '../../types/fhir.types';
 import { PractitionerIdentifierType } from '../practitioner.types';
-import { UserData } from '../../auth/auth.types';
 import { Roles } from '../../auth/roles/roles.decorator';
 
 @ApiTags('Practitioner')
@@ -178,6 +177,8 @@ export class PractitionerController {
       a: {
         summary: 'Ejemplo de actualización de perfil',
         value: {
+          id: 'a1b2c3d4-e5f6-7890-1234-567890abcdef', // ID del profesional
+          email: 'john.doe@example.com', // Email del profesional
           profile: {
             name: [
               {
@@ -222,11 +223,9 @@ export class PractitionerController {
   @ApiResponse({ status: 200, description: 'Perfil actualizado exitosamente.' })
   @ApiResponse({ status: 400, description: 'Datos de actualización inválidos.' })
   @CatchError()
-  public async update(@Request() req: { user: UserData }, @Body() practitioner: UpdateProfileDto) {
-    const id = req.user.id;
-    const email = req.user.email;
-
-    await this.service.update({ ...practitioner, userId: id, email });
+  public async update(@Body() practitioner: UpdateProfileDto) {
+    // Ahora id y email vienen directamente en el DTO practitioner
+    await this.service.update(practitioner);
     return 'Profile updated successfully';
   }
 }
