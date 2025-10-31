@@ -21,10 +21,11 @@ export class PractitionerService {
     @InjectRepository(Practitioner)
     private readonly repository: Repository<Practitioner>,
     @InjectRepository(PractitionerQualification)
-    private readonly updaterFactory: PractitionerUpdaterFactory,
+    private readonly practitionerQualificationRepository: Repository<PractitionerQualification>,
     @InjectRepository(CalendarEntity)
     private readonly calendarRepo: Repository<CalendarEntity>,
     private readonly calendarService: CalendarService,
+    private readonly updaterFactory: PractitionerUpdaterFactory,
   ) {}
 
   public async create(dto: PractitionerRegisterDto, id: string) {
@@ -78,14 +79,14 @@ export class PractitionerService {
   }
 
   public async findByQualification(qualificationCode: string): Promise<Practitioner[]> {
-    return await this.repository
-      .createQueryBuilder('practitioner')
-      .leftJoinAndSelect('practitioner.qualification', 'qualification')
-      .where('qualification.code = :qualificationCode', { qualificationCode })
-      .leftJoinAndSelect('practitioner.telecom', 'telecom')
-      .leftJoinAndSelect('practitioner.identifier', 'identifier')
-      .leftJoinAndSelect('practitioner.calendar', 'calendar')
-      .getMany();
+    return await this.repository.find({
+      relations: ['qualification', 'telecom', 'identifier', 'calendar'],
+      where: {
+        qualification: {
+          code: qualificationCode,
+        },
+      },
+    });
   }
 
   public async findAllWithCalendar(): Promise<Practitioner[]> {
