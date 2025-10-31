@@ -1,8 +1,7 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { AppointmentService } from './appointment.service';
-import { ApiTags, ApiOperation, ApiResponse, ApiParam } from '@nestjs/swagger';
-import { UpdateAppointmentDto } from './dtos/update-appointment.dto';
-import { CreateAppointmentDto } from './dtos/create-appointment.dto';
+import { ApiTags, ApiOperation, ApiResponse, ApiParam, ApiQuery } from '@nestjs/swagger';
+import { UpdateAppointmentDto, CreateAppointmentDto, GetOccupiedAppointmentsDto } from './dtos';
 
 @ApiTags('Appointments')
 @Controller('appointments')
@@ -22,11 +21,28 @@ export class AppointmentController {
     return this.appointmentService.findAll();
   }
 
-  @Get(':id')
-  @ApiOperation({ summary: 'Ver detalles de una cita por ID' })
-  @ApiParam({ name: 'id', type: 'string' })
-  findOne(@Param('id') id: string) {
-    return this.appointmentService.findOne(id);
+  @Get('occupied-by-doctor')
+  @ApiOperation({ summary: 'Obtener citas ocupadas de un doctor en un rango de fechas' })
+  @ApiQuery({ name: 'practitionerId', type: 'string', description: 'ID del doctor' })
+  @ApiQuery({
+    name: 'startDate',
+    type: 'string',
+    format: 'date-time',
+    description: 'Fecha de inicio del rango (ISO 8601)',
+  })
+  @ApiQuery({
+    name: 'endDate',
+    type: 'string',
+    format: 'date-time',
+    description: 'Fecha de fin del rango (ISO 8601)',
+  })
+  @ApiResponse({ status: 200, description: 'Citas ocupadas obtenidas correctamente' })
+  getOccupiedAppointmentsByDoctor(@Query() query: GetOccupiedAppointmentsDto) {
+    return this.appointmentService.getOccupiedAppointmentsByDoctor(
+      query.practitionerId,
+      new Date(query.startDate),
+      new Date(query.endDate),
+    );
   }
 
   @Get('doctor/:doctorId')
@@ -41,6 +57,13 @@ export class AppointmentController {
   @ApiParam({ name: 'patientId', type: 'string' })
   findByPatient(@Param('patientId') patientId: string) {
     return this.appointmentService.findByPatient(patientId);
+  }
+
+  @Get(':id')
+  @ApiOperation({ summary: 'Ver detalles de una cita por ID' })
+  @ApiParam({ name: 'id', type: 'string' })
+  findOne(@Param('id') id: string) {
+    return this.appointmentService.findOne(id);
   }
 
   @Patch(':id')

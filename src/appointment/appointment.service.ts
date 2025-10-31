@@ -237,6 +237,29 @@ export class AppointmentService {
     return updated;
   }
 
+  async getOccupiedAppointmentsByDoctor(practitionerId: string, startDate: Date, endDate: Date) {
+    const appointments = await this.appointmentRepo
+      .createQueryBuilder('appointment')
+      .leftJoinAndSelect('appointment.doctor', 'doctor')
+      .leftJoinAndSelect('appointment.patient', 'patient')
+      .where('doctor.keycloakId = :practitionerId', { practitionerId })
+      .andWhere('appointment.startAt BETWEEN :startDate AND :endDate', { startDate, endDate })
+      .andWhere('appointment.status IN (:...statuses)', { statuses: ['confirmed', 'open'] }) // Considerar estados que implican ocupación
+      .orderBy('appointment.startAt', 'ASC')
+      .getMany();
+
+    return {
+      practitionerId,
+      appointments: appointments.map((apt) => ({
+        id: apt.id,
+        startAt: apt.startAt.toISOString(),
+        endAt: apt.endAt.toISOString(),
+        status: apt.status,
+        patientId: apt.patient.keycloakId,
+      })),
+    };
+  }
+
   async remove(id: string) {
     const appointment = await this.findOne(id);
     const result = await this.appointmentRepo.delete(id);
