@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Logger, Patch, Post, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Logger, Patch, Post, Request, UseGuards, Param} from '@nestjs/common';
 import { RolesTypes } from '../../auth/auth.types';
 import { KeyCloakService } from '../../keycloak/services/create/create.service';
 import { PractitionerRegisterDto } from '../dto/PractitionerRegisterDto';
@@ -80,11 +80,8 @@ export class PractitionerController {
   }
 
   // @Roles(RolesTypes.PRACTITIONER, RolesTypes.ADMIN)
-  @Get('me')
-  @ApiOperation({
-    summary: 'Obtener perfil del profesional actual',
-    description: 'Retorna los datos del profesional autenticado.',
-  })
+  @Get(':id')
+  @ApiOperation({ summary: 'Obtener profesional por ID' })
   @ApiResponse({
     status: 200,
     description: 'Perfil del profesional obtenido exitosamente.',
@@ -136,10 +133,10 @@ export class PractitionerController {
   })
   @ApiResponse({ status: 404, description: 'Profesional no encontrado.' })
   @CatchError()
-  public async getCurrentPractitioner(@Request() req: { user: UserData }) {
-    const keycloakId = req.user.id;
-    Logger.log('id del user', keycloakId);
-    const practitioner = await this.service.findOne(keycloakId);
+  public async getCurrentPractitioner(@Param('id') id: string) {
+    // const keycloakId = req.user.id;
+    Logger.log('id del user', id);
+    const practitioner = await this.service.findOne(id);
     return practitioner;
   }
 
