@@ -22,7 +22,6 @@ export class CalendarService {
   ) {}
 
   async createOrGetCalendar(doctorKeycloakId: string, dto?: CreateCalendarDto): Promise<CalendarEntity> {
-    Logger.log('id del user', keycloakId);
     const doctor = await this.practitionerRepo.findOne({
       where: { keycloakId: doctorKeycloakId },
       relations: ['calendar'],
