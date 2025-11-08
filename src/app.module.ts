@@ -15,6 +15,7 @@ import { CalendarModule } from './calendar/calendar.module';
 import { AvailabilityModule } from './availability/availability.module';
 import { AppointmentModule } from './appointment/appointment.module';
 import { PersonModule } from './person/person.module';
+import { PatientModule } from './patient/patient.module';
 
 @Module({
   imports: [
@@ -36,6 +37,7 @@ import { PersonModule } from './person/person.module';
     AvailabilityModule,
     AppointmentModule,
     PersonModule,
+    PatientModule,
   ],
   controllers: [],
   providers: [AppService],

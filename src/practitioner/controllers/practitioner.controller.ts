@@ -27,7 +27,7 @@ export class PractitionerController {
   ) {}
 
   @Roles(RolesTypes.ADMIN)
-  @Post('register-practitioner')
+  @Post('register')
   @ApiOperation({
     summary: 'Registrar un nuevo profesional',
     description: 'Registra un nuevo profesional en el sistema y Keycloak.',

@@ -9,13 +9,16 @@ import {
   UpdateProfileDto,
 } from '../../dto';
 import { AvailableUpdates, UpdatePerson } from '../../../types/person.types';
-import { PractitionerUpdaterFactory } from '../../factory/person-updater.factory';
+import { PersonUpdaterFactory } from '../../factory/person-updater.factory';
+import { Patient } from '../../../patient/entities/patient.entity';
+import { Practitioner } from '../../../practitioner/entities';
 
 @Injectable()
-export abstract class PersonService<T extends ObjectLiteral> {
+export abstract class PersonService<T extends Patient | Practitioner> {
   constructor(
     protected readonly repository: Repository<T>,
-    protected readonly updaterFactory: PractitionerUpdaterFactory,
+    protected readonly updaterFactory: PersonUpdaterFactory,
+    protected readonly entity: new () => T,
   ) {}
 
   public async create(dto: CreatePersonDto, id: string, rol: RolesTypes.PATIENT | RolesTypes.PRACTITIONER) {
@@ -35,7 +38,7 @@ export abstract class PersonService<T extends ObjectLiteral> {
     let promises: void[] = [];
 
     const { userId, email, ...updatedData } = person;
-    const updater = this.updaterFactory.create(person.userId);
+    const updater = this.updaterFactory.create<T>(person.userId, this.entity);
     const modulesToUpdate = Object.keys(updatedData);
     const updates: AvailableUpdates = {
       ['telecom']: (data: CreateTelecomDto[]) => updater.telecom(data, email),

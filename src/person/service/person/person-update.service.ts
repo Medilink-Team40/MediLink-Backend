@@ -1,46 +1,77 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { UpdateIdentifierDto } from '../../dto/UpdateIdentifier.dto';
-import { UpdateBasicDataDto } from '../../dto/UpdateBasicData.dto';
-import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from '../../../practitioner/entities';
-import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../../practitioner/errors.codes';
-import { Repository } from 'typeorm';
-import { CreateTelecomDto } from '../../dto/Telecom.dto';
+import { FindOptionsWhere, Repository } from 'typeorm';
 import { UpdaterService } from '../../../shared/services/updater/updater.service';
+import { PRACTITIONER_ERROR, PRACTITIONER_ERROR_CODES } from '../../../practitioner/errors.codes';
+import { CreateTelecomDto, UpdateBasicDataDto, UpdateIdentifierDto } from '../../dto';
+import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from '../../../practitioner/entities';
+import { Patient } from '../../../patient/entities/patient.entity';
+import { PatientTelecom } from '../../../patient/entities/telecom.entity';
+import { PatientIdentifier } from '../../../patient/entities/identifier.entity';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
-export class PersonUpdater {
+/**
+ */
+
+export interface Entities {
+  profile: Practitioner | Patient;
+  telecom: PractitionerTelecom | PatientTelecom;
+  identifiers: PatientIdentifier | PractitionerIdentifier;
+}
+
+export class PersonUpdater<P extends Entities> {
+  private idField;
+
   constructor(
-    private readonly user: string,
-    private readonly telecomRepository: Repository<PractitionerTelecom>,
-    private readonly profileRepository: Repository<Practitioner>,
-    private readonly identifiersRepository: Repository<PractitionerIdentifier>,
-  ) {}
+    private readonly userId: string,
+    private readonly telecomRepository: Repository<P['telecom']>,
+    private readonly profileRepository: Repository<P['profile']>,
+    private readonly identifiersRepository: Repository<P['identifiers']>,
+    private readonly entity: new () => Patient | Practitioner,
+  ) {
+    this.idField = entity === Practitioner ? 'practitionerId' : 'patientId';
+  }
+
+  private matchParent<K extends keyof Entities>(key: K) {
+    return { [this.idField]: this.userId } as FindOptionsWhere<P[K]>;
+  }
 
   public async telecom(telecomData: CreateTelecomDto[], email: string) {
-    const incomingValues = telecomData.map(({ value }) => value).filter((value) => !!value);
+    const incomingValues = telecomData.map(({ value }) => value).filter(Boolean);
+
     if (incomingValues.includes(email)) {
       throw new HttpException(PRACTITIONER_ERROR[PRACTITIONER_ERROR_CODES.ERROR_001], HttpStatus.BAD_REQUEST);
     }
 
-    await UpdaterService.upsert(this.telecomRepository, telecomData, 'value', { practitionerId: this.user });
+    const telecomEntities = telecomData.map((dto) => ({
+      ...dto,
+      [this.idField]: this.userId,
+    })) as Partial<P['telecom']>[];
+
+    await UpdaterService.upsert<P['telecom'], 'value'>(
+      this.telecomRepository,
+      telecomEntities,
+      'value',
+      this.matchParent('telecom'),
+    );
   }
 
   public async identifiers(data: UpdateIdentifierDto[]) {
     const entities = data.map((dto) => ({
       ...dto,
-      practitionerId: this.user,
-    }));
+      [this.idField]: this.userId,
+    })) as Partial<P['identifiers']>[];
 
-    await UpdaterService.upsert(this.identifiersRepository, entities, 'value', { practitionerId: this.user });
+    await UpdaterService.upsert(this.identifiersRepository, entities, 'value', this.matchParent('identifiers'));
   }
 
   public async profile(data: UpdateBasicDataDto) {
-    const updateData: Partial<Practitioner> = {};
+    const updateData = {} as QueryDeepPartialEntity<Patient & Practitioner>;
 
-    if (data.name) updateData.name = data.name;
-    if (data.birthDate) updateData.birthDate = data.birthDate;
-    if (data.gender) updateData.gender = data.gender;
+    if ('name' in data) updateData.name = data.name;
+    if ('birthDate' in data) updateData.birthDate = data.birthDate;
+    if ('gender' in data) updateData.gender = data.gender;
     if (typeof data.active === 'boolean') updateData.active = data.active;
 
-    await this.profileRepository.update({ keycloakId: this.user }, updateData);
+    await this.profileRepository.update({ keycloakId: this.userId } as FindOptionsWhere<P['profile']>, updateData);
   }
 }

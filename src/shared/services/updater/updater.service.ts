@@ -10,9 +10,7 @@ export class UpdaterService {
     matchParent: FindOptionsWhere<T>,
   ) {
     const existingRecords = await repository.findBy(matchParent);
-
     const incomingValues = data.map((item) => item[matchColumn]).filter((value): value is T[K] => !!value);
-
     const recordsToDelete = existingRecords.filter(
       (record) => record[matchColumn] && !incomingValues.includes(record[matchColumn]),
     );

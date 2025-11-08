@@ -4,13 +4,18 @@ import { Patient } from '../../entities/patient.entity';
 import { RolesTypes } from '../../../auth/auth.types';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { PersonService } from '../../../person/service/person/person.service';
+import { PersonUpdaterFactory } from '../../../person/factory/person-updater.factory';
 
 @Injectable()
-export class PatientService {
+export class PatientService extends PersonService<Patient> {
   constructor(
     @InjectRepository(Patient)
-    private readonly repository: Repository<Patient>,
-  ) {}
+    private readonly repo: Repository<Patient>,
+    protected readonly updaterFactory: PersonUpdaterFactory,
+  ) {
+    super(repo, updaterFactory, Patient);
+  }
 
   public async create(dto: PatientRegisterDto, id: string) {
     const { repeatpassword, password, ...requiredData } = dto;
