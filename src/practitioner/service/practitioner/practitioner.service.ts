@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Practitioner } from '../../../practitioner/entities';
-import { PersonUpdaterFactory } from '../../../person/factory/person-updater.factory';
 import { PersonService } from '../../../person/service/person/person.service';
+import { PersonUpdaterFactory } from '../../../person/factory/person-updater.factory';
 
 @Injectable()
 export class PractitionerService extends PersonService<Practitioner> {

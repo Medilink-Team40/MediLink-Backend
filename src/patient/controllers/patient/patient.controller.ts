@@ -63,7 +63,6 @@ export class PatientController {
   @CatchError()
   public async create(@Body() patient: PatientRegisterDto) {
     const keycloakid = await this.keycloak.createUserAndAssignRole(new KeycloakCreateDto(patient), RolesTypes.PATIENT);
-
     const user = await this.service.create(patient, keycloakid);
     return user;
   }

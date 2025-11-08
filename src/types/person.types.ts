@@ -2,7 +2,7 @@ import { Repository } from 'typeorm';
 import { UpdateIdentifierDto } from '../person/dto';
 import { NameStructDto } from '../person/dto/NameStruct.dto';
 import { CreateTelecomDto, UpdateBasicDataDto } from '../practitioner/dto';
-import { FHIRExternalGender } from '../types/fhir.types';
+import { FHIRExternalGender, FHIRTelecomSystem, TelecomUses } from '../types/fhir.types';
 import { Practitioner, PractitionerIdentifier, PractitionerTelecom } from '../practitioner/entities';
 import { PatientTelecom } from '../patient/entities/telecom.entity';
 import { Patient } from '../patient/entities/patient.entity';
@@ -25,6 +25,16 @@ export interface UpdatePerson {
   profile?: UpdateBasicDataDto;
   telecom?: CreateTelecomDto[];
   identifiers?: UpdateIdentifierDto[];
+}
+
+export interface TelecomEntity {
+  id: string;
+  system: FHIRTelecomSystem;
+  value: string;
+  use: TelecomUses;
+  rank: number;
+  practitioner: Practitioner | Patient;
+  practitionerId: string;
 }
 
 export interface Repositories<P extends { profile: any; telecom: any; identifiers: any }> {

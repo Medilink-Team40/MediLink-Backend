@@ -1,7 +1,7 @@
 import { Body, Controller, Get, Patch, Post, Request, UseGuards } from '@nestjs/common';
 import { RolesTypes } from '../../auth/auth.types';
 import { KeyCloakService } from '../../keycloak/services/create/create.service';
-import { CreatePersonDto as PractitionerRegisterDto } from '../../person/dto/CreatePersonDto';
+import { CreatePersonDto } from '../../person/dto/CreatePersonDto';
 import { CatchError } from '../../decorators/errors.decorator';
 import { KeycloakCreateDto } from '../../keycloak/dto/KeycloakDto';
 import { PractitionerService } from '../service/practitioner/practitioner.service';
@@ -33,7 +33,7 @@ export class PractitionerController {
     description: 'Registra un nuevo profesional en el sistema y Keycloak.',
   })
   @ApiBody({
-    type: PractitionerRegisterDto,
+    type: CreatePersonDto,
     examples: {
       a: {
         summary: 'Ejemplo de registro de profesional',
@@ -72,7 +72,7 @@ export class PractitionerController {
   @ApiResponse({ status: 201, description: 'Profesional registrado exitosamente.' })
   @ApiResponse({ status: 400, description: 'Datos de registro inválidos.' })
   @CatchError()
-  public async create(@Body() practitioner: PractitionerRegisterDto) {
+  public async create(@Body() practitioner: CreatePersonDto) {
     const keycloakid = await this.keycloak.createUserAndAssignRole(
       new KeycloakCreateDto(practitioner),
       RolesTypes.PRACTITIONER,
